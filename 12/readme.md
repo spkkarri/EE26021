@@ -1,14 +1,11 @@
-# Battery Life Prediction Project
+# Self Driving Car using Reinforcement Learning 
 
-This project implements various deep learning models (MambaNet, AutoReformer, DLinear, XLSTM) for battery life prediction.
+This project implements a self‑driving car using Proximal Policy Optimization (PPO) in the MetaDrive simulator. The agent learns to drive safely, stay on the road, and reach its destination through deep reinforcement learning with domain randomization and curriculum learning.
 
 ## Team Members
-- Mehul Jain (Team Lead) - 522206
-- Krishna Tayal - 522152
-- Shivam Kumar - 522242
-- Satya Pavan - 522146
-- Jayavarapu Varshitha - 522137
-- Devkinandan Shakywal - 522124
+- K Karthik Sai Chaitanya (Team Lead) - 524144
+- A Sai Teja - 524108
+- R Vamsi Meenan - 524168
 
 ## Project Explanation
 Watch our project explanation:
@@ -16,25 +13,20 @@ Watch our project explanation:
 
 ## Setup Instructions
 
-### 1. Download Models and Dataset
+### 1. Install Python 3.8
 
-First, download the required .pth models and dataset using the provided bash script:
+Make sure you have Python 3.8 installed. You can download it from python.org.
+
+### 2. Create a Virtual Environment
 
 ```bash
-cd data
-chmod +x download_dataset.sh
-./download_dataset.sh
+cd Code
+python -m venv venv_driving
+venv_driving\Scripts\activate   # Windows
+# source venv_driving/bin/activate   # Linux/Mac
 ```
 
-This will create a `downloaded_files` directory containing:
-- Model weights (.pth files)
-  - Mamba.pth
-  - AutoReformer.pth
-  - Adv_Dlinear.pth
-  - XLSTM.pth
-- Dataset files
-
-### 2. Install Requirements
+### 3. Install Requirements
 
 Install all required dependencies using pip:
 
@@ -43,56 +35,78 @@ cd Code
 pip install -r requirements.txt
 ```
 
-Make sure you have CUDA installed if you want to use GPU acceleration.
+If you don't have a requirements.txt, install manually:
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip install metadrive-simulator==0.4.3 stable-baselines3==2.2.1 gymnasium==0.29.1 numpy==1.23.5
+pip install matplotlib pandas tqdm scipy opencv-python pillow imageio python-pptx
+```
 
-### 3. Run the Project
-
-Execute the main script:
+### 4. Run the Live Demo
 
 ```bash
 cd Code
-python main.py
+python video.py
 ```
-The script will:
-1. Load the pre-trained models
-2. Generate predictions using each model
-3. Create an ensemble prediction using LSTM with attention
-4. Display comparative plots for different batteries
+A MetaDrive window will open – the car will drive automatically. Press Ctrl+C to stop.
 
 
-### 4. Results and Outputs
-All generated plots and model outputs are saved in the `assets` folder:
+### 5. Train a New Model
+If you want to train from scratch, run:
+
+```bash
+cd Code
+python train_and_animate.py
 ```
-├── assets/
-│   └── results/         # Performance metrics visualizations
+When asked “Use existing model? (y/n)”, type n. Training takes 30‑40 minutes.
+
+### 5. Train a New Model
+If you want to train from scratch, run:
+
+```bash
+cd Code
+python generate_ppt.py
 ```
+The file Self_Driving_Car_Presentation.pptx will be created.
 
 ## Project Structure
 
 ```
-├── Code/
-│   ├── main.py           # Main implementation
-│   ├── requirements.txt  # Dependencies
-│   ├── Mamba.ipynb    # MambaNet training implementation
-│   ├── AutoReformer.ipynb # AutoReformer training implementation
-│   ├── Dlinear.ipynb  # DLinear training implementation
-│   └── XLSTM.ipynb    # XLSTM training implementation
-├── data/
-│   ├── download_dataset.sh  # Dataset/model downloader
-│   └── downloaded_files/    # Downloaded models and data
-├── assets/               # Output graphs and comparision with Model from research paper Transformer network for remaining useful life prediction of lithium-ion batteries(2022) and visualizations and Presentation
+Code/
+├── main.py                    # Orchestrator: dataset management, training, demo
+├── train_and_animate.py      # Trains PPO, generates GIF, charts, summary
+├── video.py                  # Live demo with best model selection
+├── collect_dataset.py        # Collects 500,000 driving samples
+├── generate_ppt.py           # Creates PowerPoint from outputs
+├── models_saved/             # Trained PPO models (.zip)
+├── requirements.txt          # Dependencies
+└── README.md                 # This file
+
+assets/                       # Presentation slides and report (1‑slide PPT, PDF)
+data/                         # Shell script (download_dataset.sh) – optional
 ```
 
-#### Model Performance Comparison
+## Performance GIF (Animated)
 ![Model Comparison](assets/Final_Output.jpg)
-*Figure 1: Comparison of prediction accuracy across different batteries*
+* Animated graph showing reward, steering, throttle, and cumulative reward over time.*
+## Panel Analysis Chart
+![Model Comparison](assets/Final_Output.jpg)
+*Includes: rewards, cumulative reward, steering/throttle distributions, reward distribution, action space, value/policy/entropy loss curves.*
 
-![Model Comparison](assets/Comparison_Output.jpg)
-*Figure 2: Comparison with recent Research Model predicitions*
+#### Key Techniques
 
+- # Domain Randomization:
+  Randomises friction, gravity, mass, LiDAR noise, traffic density, weather, and lighting at every reset – improves sim‑to‑real transfer.
+- # Curriculum Learning:
+  Progresses from straight road → curves → mixed → city → roundabout as training advances.
+- # Dataset Collection:
+   500,000 samples collected with progressive difficulty (random → straight → moderate → aggressive → expert).
+- # PPO Optimisation:
+ Hyperparameters tuned for MetaDrive (learning rate 2.5e-4, n_steps 4096, batch size 128, ent_coef 0.005).
+ 
 ## System Requirements
 
 - Python 3.8+
-- CUDA toolkit (optional, for GPU support)
-- 8GB RAM minimum
-- 2GB disk spaces
+- 8 GB RAM (minimum)
+- 2 GB free disk space (for dataset and models)
+- CPU only (GPU optional for faster training)
