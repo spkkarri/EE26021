@@ -87,10 +87,10 @@ data/                         # Shell script (download_dataset.sh) – optional
 ```
 
 ## Performance GIF (Animated)
-![GIF](assets/gif.gif)
+![GIF](assests/gif.gif)
 * Animated graph showing reward, steering, throttle, and cumulative reward over time.*
 ## Panel Analysis Chart
-![CHARTS](assets/output_chart.png)
+![CHARTS](assests/output_chart.png)
 *Includes: rewards, cumulative reward, steering/throttle distributions, reward distribution, action space, value/policy/entropy loss curves.*
 
 ## Key Techniques
