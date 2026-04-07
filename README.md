@@ -18,6 +18,14 @@ Backend: FastAPI (Dockerized on Hugging Face Spaces)
 
 ---
 
+## Team Members
+  - Renganath Chokkalingam (Team Lead) - 524170
+  - Adwaith Rajani Krishnan - 524103
+  - Aswan Sanjeev - 524111
+
+
+---
+
 ## 🏗️ Architecture
 
 | Component        | Value   |
