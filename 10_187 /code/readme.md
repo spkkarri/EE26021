@@ -106,16 +106,12 @@ EE26021/26/Team_LastDigits/
 │   ├── smart_grid_env.py
 │   ├── requirements.txt
 │   ├── smart_grid_rl.html
-│   ├── dqn_weights.npz
-│   ├── ppo_weights.npz
-│   └── metrics.txt
 │
 ├── assets/
 │   ├── training.png
-│   ├── Final_Output.jpg
-│   ├── Comparison_Output.jpg
-│   ├── PPT.pptx
-│   └── Report.pdf
+│   ├── dqn_weights.npz
+│   ├── ppo_weights.npz
+│   └── metrics.txt
 │
 ├── data/
 │   ├── download_dataset.sh
