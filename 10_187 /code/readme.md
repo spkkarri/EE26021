@@ -15,7 +15,7 @@ This project implements an **Intelligent Energy Management System** using **Rein
 
 ## 🎥 Project Demo
 
-👉 https://youtu.be/syUTNftDMbQ?si=WCCgt6VHo51anUHa
+👉 [https://youtu.be/syUTNftDMbQ?si=WCCgt6VHo51anUHa](https://youtu.be/oN3nc76nFkU)
 
 ---
 
