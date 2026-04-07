@@ -38,10 +38,25 @@ The `HybridLSTMTransformer` is composed of the following stages:
 *   **Metrics:** Performance is evaluated using Mean Absolute Error (**MAE**) and Root Mean Squared Error (**RMSE**).
 
 ---
-
+## Data Drive Link:
+Dataset = https://drive.google.com/drive/folders/1MbgZrASiTTbc7bM3Yi368yPJ6obH7a6o?usp=sharing
+---
+## Demo Video Link:
+LInk = 
 ## **How to Use**
 1.  **Environment Setup:** Ensure `torch`, `pandas`, `numpy`, and `sklearn` are installed.
 2.  **Data Path:** Update the `CSV_FOLDER` variable to point to your NASA battery CSV files.
 3.  **Training:** Run the training loop to generate the `best_hybrid_soh_model.pth` file.
 4.  **Evaluation:** The script will automatically load the best model and visualize predictions against actual SOH values.
+---
+## Team information
+team number = 11
+Team lead roll number(last three digits) = 114
+Course: EE2621 – Machine Learning for Engineers
+### Team members:
+524107 - charan teja
+524113 - jagadeesh chandra prasad
+524114 - Omkar
+524121 - sanyasi naidu
+
 
