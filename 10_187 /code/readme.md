@@ -108,10 +108,12 @@ EE26021/26/Team_LastDigits/
 │   ├── smart_grid_rl.html
 │
 ├── assets/
-│   ├── training.png
+│   ├── metrices.txt
 │   ├── dqn_weights.npz
 │   ├── ppo_weights.npz
-│   └── metrics.txt
+│   └── output_ppo.png
+│   ├── output_dqn.png
+│   ├── training.png
 │
 ├── data/
 │   ├── download_dataset.sh
