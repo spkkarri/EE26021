@@ -47,7 +47,7 @@ We use the publicly available `.mat` datasets from NASA’s Prognostics Data Rep
 Dataset = https://drive.google.com/drive/folders/1MbgZrASiTTbc7bM3Yi368yPJ6obH7a6o?usp=sharing
 ---
 ## Demo Video Link:
-Link = 
+### Link = https://youtu.be/ZjZsmPtvREk?si=yXzG3z5gfQTf1TUi
 ## **How to Use**
 1.  **Environment Setup:** Ensure `torch`, `pandas`, `numpy`, and `sklearn` are installed.
 2.  **Data Path:** Update the `CSV_FOLDER` variable to point to your NASA battery CSV files.
