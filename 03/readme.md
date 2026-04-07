@@ -103,5 +103,6 @@ UAV_Based_Insulator_Classification/
 ```
 
 # Results
-<img width="1000" height="1000" alt="confusion_matrix (2)" src="https://github.com/user-attachments/assets/df06e386-af57-46fe-a2b8-5a5be3fdf7be" />
+<img width="3000" height="2250" alt="confusion_matrix (4)" src="https://github.com/user-attachments/assets/5e67df5a-1ba8-4848-b11f-76a7601e858e" />
+
 <img width="2400" height="1200" alt="results (3)" src="https://github.com/user-attachments/assets/b50a7633-e3df-47b1-9fa2-24e36887a54c" />
