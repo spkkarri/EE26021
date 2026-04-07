@@ -5,7 +5,7 @@
 ---
 ## Project Explanation
 Watch our project explanation:
-[![Link]]()
+[![Link]](https://youtu.be/0OfKZTr8JqA?si=rbcc74WTH42dybyu)
 
 #  Project Overview
 To accurately detect and classify three primary types of electrical insulators in near-real-time using the **YOLOv8n** (You Only Look Once v8) architecture.
