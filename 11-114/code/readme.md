@@ -38,6 +38,11 @@ The `HybridLSTMTransformer` is composed of the following stages:
 *   **Metrics:** Performance is evaluated using Mean Absolute Error (**MAE**) and Root Mean Squared Error (**RMSE**).
 
 ---
+## 📁 Dataset
+
+We use the publicly available `.mat` datasets from NASA’s Prognostics Data Repository:
+
+- `B0005.mat`, `B0006.mat`, `B0007.mat`, `B0008.mat`
 ## Data Drive Link:
 Dataset = https://drive.google.com/drive/folders/1MbgZrASiTTbc7bM3Yi368yPJ6obH7a6o?usp=sharing
 ---
@@ -50,13 +55,13 @@ LInk =
 4.  **Evaluation:** The script will automatically load the best model and visualize predictions against actual SOH values.
 ---
 ## Team information
-team number = 11
-Team lead roll number(last three digits) = 114
-Course: EE2621 – Machine Learning for Engineers
+-Team number = 11
+-Team lead roll number(last three digits) = 114
+-Course: EE2621 – Machine Learning for Engineers
 ### Team members:
-524107 - charan teja
-524113 - jagadeesh chandra prasad
-524114 - Omkar
-524121 - sanyasi naidu
+-524107 - charan teja
+-524113 - jagadeesh chandra prasad
+-524114 - Omkar
+-524121 - sanyasi naidu
 
 
