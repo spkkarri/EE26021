@@ -47,7 +47,7 @@ We use the publicly available `.mat` datasets from NASA’s Prognostics Data Rep
 Dataset = https://drive.google.com/drive/folders/1MbgZrASiTTbc7bM3Yi368yPJ6obH7a6o?usp=sharing
 ---
 ## Demo Video Link:
-LInk = 
+Link = 
 ## **How to Use**
 1.  **Environment Setup:** Ensure `torch`, `pandas`, `numpy`, and `sklearn` are installed.
 2.  **Data Path:** Update the `CSV_FOLDER` variable to point to your NASA battery CSV files.
@@ -56,12 +56,15 @@ LInk =
 ---
 ## Team information
 -Team number = 11
+
 -Team lead roll number(last three digits) = 114
+
 -Course: EE2621 – Machine Learning for Engineers
-### Team members:
--524107 - charan teja
--524113 - jagadeesh chandra prasad
--524114 - Omkar
--524121 - sanyasi naidu
+
+**Team Members:**
+- `524107` – A.Charan Teja  
+- `524113` – B.jagadeesh chandra pradesh  
+- `524114` – B.Omkar
+- `524121` – Ch.Sanyasi naidu
 
 
