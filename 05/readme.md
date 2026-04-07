@@ -1,98 +1,80 @@
-# Battery Life Prediction Project
-
-This project implements various deep learning models (MambaNet, AutoReformer, DLinear, XLSTM) for battery life prediction.
+# Pothole Detection
+This project implements pothole detection using computer vision techniques. 
+It processes road images to identify potholes, draws bounding boxes around them, 
+and estimates their dimensions using image processing methods such as grayscale conversion, 
+Gaussian blur, thresholding, and contour detection.
 
 ## Team Members
-- Mehul Jain (Team Lead) - 522206
-- Krishna Tayal - 522152
-- Shivam Kumar - 522242
-- Satya Pavan - 522146
-- Jayavarapu Varshitha - 522137
-- Devkinandan Shakywal - 522124
+Srihitha Tirnati - 524183
+Kshirja Challa - 524143
+P Bhavya - 524163
 
 ## Project Explanation
 Watch our project explanation:
-[![Link]](https://youtu.be/syUTNftDMbQ?si=WCCgt6VHo51anUHa)
+[![Link]](https://drive.google.com/file/d/1GWo6X1gM-GqVM1VRB5ypNb03OOUdvPeO/view?usp=sharing)
 
 ## Setup Instructions
 
-### 1. Download Models and Dataset
 
-First, download the required .pth models and dataset using the provided bash script:
+### 1. Install Requirements
+Run the following in Google Colab:
 
-```bash
-cd data
-chmod +x download_dataset.sh
-./download_dataset.sh
-```
+pip install ultralytics opencv-python matplotlib numpy
 
-This will create a `downloaded_files` directory containing:
-- Model weights (.pth files)
-  - Mamba.pth
-  - AutoReformer.pth
-  - Adv_Dlinear.pth
-  - XLSTM.pth
-- Dataset files
+### 2. Upload Dataset
 
-### 2. Install Requirements
+Upload your dataset zip file using:
 
-Install all required dependencies using pip:
+from google.colab import files
+files.upload()
 
-```bash
-cd Code
-pip install -r requirements.txt
-```
+Then extract:
 
-Make sure you have CUDA installed if you want to use GPU acceleration.
+import zipfile
+with zipfile.ZipFile("dataset.zip", 'r') as zip_ref:
+    zip_ref.extractall("/content/dataset")
 
 ### 3. Run the Project
 
-Execute the main script:
+Execute the main code in Colab:
 
-```bash
-cd Code
-python main.py
-```
-The script will:
-1. Load the pre-trained models
-2. Generate predictions using each model
-3. Create an ensemble prediction using LSTM with attention
-4. Display comparative plots for different batteries
+- Load image
+- Apply preprocessing (grayscale, blur)
+- Apply thresholding
+- Detect contours
+- Draw bounding boxes
+
+The output will show detected potholes with dimensions.
 
 
 ### 4. Results and Outputs
-All generated plots and model outputs are saved in the `assets` folder:
-```
-├── assets/
-│   └── results/         # Performance metrics visualizations
-```
+
+- Potholes detected using bounding boxes
+- Width and height displayed on image
+- Output visualized using matplotlib
 
 ## Project Structure
 
-```
-├── Code/
-│   ├── main.py           # Main implementation
-│   ├── requirements.txt  # Dependencies
-│   ├── Mamba.ipynb    # MambaNet training implementation
-│   ├── AutoReformer.ipynb # AutoReformer training implementation
-│   ├── Dlinear.ipynb  # DLinear training implementation
-│   └── XLSTM.ipynb    # XLSTM training implementation
-├── data/
-│   ├── download_dataset.sh  # Dataset/model downloader
-│   └── downloaded_files/    # Downloaded models and data
-├── assets/               # Output graphs and comparision with Model from research paper Transformer network for remaining useful life prediction of lithium-ion batteries(2022) and visualizations and Presentation
-```
+Code/
+  pothole_detection.ipynb
+  README.md
 
-#### Model Performance Comparison
-![Model Comparison](assets/Final_Output.jpg)
-*Figure 1: Comparison of prediction accuracy across different batteries*
+assets/
+  PPT.pptx
+  Report.pdf
 
-![Model Comparison](assets/Comparison_Output.jpg)
-*Figure 2: Comparison with recent Research Model predicitions*
+data/
+  dataset.zip
 
+## Model Performance
+
+- Successfully detects potholes using contour detection
+- Works well on clear road images
+- Accuracy depends on lighting and threshold values
 ## System Requirements
 
-- Python 3.8+
-- CUDA toolkit (optional, for GPU support)
-- 8GB RAM minimum
-- 2GB disk spaces
+- Python 3.x
+- Google Colab
+- OpenCV
+- NumPy
+- Matplotlib
