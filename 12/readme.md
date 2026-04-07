@@ -93,15 +93,15 @@ data/                         # Shell script (download_dataset.sh) – optional
 ![Model Comparison](assets/Final_Output.jpg)
 *Includes: rewards, cumulative reward, steering/throttle distributions, reward distribution, action space, value/policy/entropy loss curves.*
 
-#### Key Techniques
+## Key Techniques
 
-- # Domain Randomization:
+- ###### Domain Randomization:
   Randomises friction, gravity, mass, LiDAR noise, traffic density, weather, and lighting at every reset – improves sim‑to‑real transfer.
-- # Curriculum Learning:
+- ###### Curriculum Learning:
   Progresses from straight road → curves → mixed → city → roundabout as training advances.
-- # Dataset Collection:
+- ###### Dataset Collection:
    500,000 samples collected with progressive difficulty (random → straight → moderate → aggressive → expert).
-- # PPO Optimisation:
+- ###### PPO Optimisation:
  Hyperparameters tuned for MetaDrive (learning rate 2.5e-4, n_steps 4096, batch size 128, ent_coef 0.005).
  
 ## System Requirements
