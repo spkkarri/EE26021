@@ -9,7 +9,7 @@ This project implements a self‑driving car using Proximal Policy Optimization 
 
 ## Project Explanation
 Watch our project explanation:
-[![Link]](https://youtu.be/syUTNftDMbQ?si=WCCgt6VHo51anUHa)
+[![Link]](https://youtu.be/9m7jEpj1QhY?si=ccVJPZIUCj4lyfSU)
 
 ## Setup Instructions
 
