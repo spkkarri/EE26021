@@ -6,7 +6,7 @@
 ## Project Explanation
 Watch our project explanation:
 [![Link]](https://youtu.be/0OfKZTr8JqA?si=rbcc74WTH42dybyu)
-
+[![Link]](https://docs.google.com/presentation/d/1_yVkvcKhMTV5uDg88F0pgqw12CJ9FBCWpO-XHBE5SDg/edit?usp=sharing)
 #  Project Overview
 To accurately detect and classify three primary types of electrical insulators in near-real-time using the **YOLOv8n** (You Only Look Once v8) architecture.
 * **Target Classes:** Porcelain, Glass, and Composite insulators.
