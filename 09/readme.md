@@ -1,98 +1,314 @@
-# Battery Life Prediction Project
+#  EV Battery Intelligence System
 
-This project implements various deep learning models (MambaNet, AutoReformer, DLinear, XLSTM) for battery life prediction.
+### Anomaly Detection • SoC • SoH • RUL • EV Range Prediction using Hybrid AI Models
 
-## Team Members
-- Mehul Jain (Team Lead) - 522206
-- Krishna Tayal - 522152
-- Shivam Kumar - 522242
-- Satya Pavan - 522146
-- Jayavarapu Varshitha - 522137
-- Devkinandan Shakywal - 522124
+This project implements a **complete battery intelligence pipeline** for Electric Vehicles including:
 
-## Project Explanation
-Watch our project explanation:
-[![Link]](https://youtu.be/syUTNftDMbQ?si=WCCgt6VHo51anUHa)
+* Battery Anomaly Detection
+* State of Charge (SoC) Estimation
+* State of Health (SoH) Prediction
+* Remaining Useful Life (RUL) Prediction
+* EV Driving Range Prediction
+* Hybrid Deep Learning + ML Ensemble Architecture
 
-## Setup Instructions
+The system combines **Deep Neural Networks, LSTM, Residual Networks, and Gradient Boosting** to provide accurate battery analytics.
 
-### 1. Download Models and Dataset
+---
 
-First, download the required .pth models and dataset using the provided bash script:
+#  Project Explanation Video
+
+Watch the complete explanation of our model and implementation:
+
+🔗 https://www.youtube.com/playlist?list=PLMowFToGv2T4U9zJG3LClz9bpXaAKRlWC
+This video explains:
+
+* Full pipeline architecture
+* Anomaly detection model
+* SoC, SoH, RUL models
+* EV range prediction ensemble
+* Training and results visualization
+
+---
+
+#  Team Members
+
+* P.Nagashiva (Team Lead) – 524162
+* S.Sridhar – 524179
+* T.Rishik – 524181
+* S.Tharun – 524177
+
+---
+
+#  Project Objective
+
+The goal of this project is to build an **end-to-end EV battery prediction pipeline** that:
+
+* Detects abnormal battery behaviour
+* Predicts battery charge level (SoC)
+* Estimates battery degradation (SoH)
+* Predicts Remaining Useful Life (RUL)
+* Predicts EV driving range
+* Uses ensemble learning for high accuracy
+* Provides visualization for battery degradation trends
+
+---
+
+#  Model Architecture Overview
+
+The pipeline consists of **four major AI modules**
+
+##  Battery Anomaly Detection Model
+
+* Isolation Forest based anomaly detection
+* Detects abnormal battery behaviour
+* Identifies sudden voltage/current spikes
+* Detects abnormal degradation patterns
+* Flags unsafe battery operating conditions
+
+---
+
+##  SoC Estimation Model
+
+* Deep Neural Network (DNN)
+* Learns battery voltage, current, temperature patterns
+* Predicts real-time battery charge level
+* Used as input for SoH model
+
+---
+
+##  SoH Prediction Model
+
+* Residual Deep Neural Network
+* Uses skip connections
+* Predicts battery degradation over cycles
+* Learns nonlinear aging behaviour
+
+---
+
+##  RUL Prediction Model
+
+* LSTM based time-series model
+* Uses cycle history sequences
+* Predicts remaining battery life
+* Captured temporal degradation trend
+
+---
+
+##  EV Range Prediction Model
+
+Hybrid Ensemble Model:
+
+* Deep Neural Network (Residual DNN)
+* Gradient Boosting Regressor (GBM)
+* Blended prediction (DNN + GBM)
+
+This module predicts:
+
+* Remaining EV driving range (km)
+* Based on SoC, SoH, RUL and environment features
+
+---
+
+#  Full Pipeline Flow
+
+Raw Battery Data
+↓
+Anomaly Detection Model
+↓
+SoC Model
+↓
+SoH Model
+↓
+RUL Model
+↓
+EV Range Model (DNN + GBM Ensemble)
+↓
+Final Battery Intelligence Output
+
+---
+
+#  Final Pipeline Performance
+
+| Module              | MAE    | RMSE   | R²      |
+| ------------------- | ------ | ------ | ------- |
+| SoC Estimation      | 0.0028 | 0.0035 | -0.0528 |
+| SoH Prediction      | 0.0058 | 0.0074 | 0.9775  |
+| RUL Prediction      | 2.2908 | 2.9606 | 0.9879  |
+| EV Range Prediction | 0.6026 | 0.7860 | 0.9979  |
+
+---
+
+#  Setup Instructions
+
+## 1. Clone Project
 
 ```bash
-cd data
-chmod +x download_dataset.sh
-./download_dataset.sh
+git clone <repo_link>
+cd EV_Battery_Project
 ```
 
-This will create a `downloaded_files` directory containing:
-- Model weights (.pth files)
-  - Mamba.pth
-  - AutoReformer.pth
-  - Adv_Dlinear.pth
-  - XLSTM.pth
-- Dataset files
+---
 
-### 2. Install Requirements
-
-Install all required dependencies using pip:
+## 2. Install Requirements
 
 ```bash
-cd Code
 pip install -r requirements.txt
 ```
 
-Make sure you have CUDA installed if you want to use GPU acceleration.
+Required libraries:
 
-### 3. Run the Project
+* TensorFlow / Keras
+* Scikit-learn
+* Pandas
+* NumPy
+* Matplotlib
+* Seaborn
 
-Execute the main script:
+---
+
+## 3. Run Complete Pipeline
 
 ```bash
-cd Code
 python main.py
 ```
+
 The script will:
-1. Load the pre-trained models
-2. Generate predictions using each model
-3. Create an ensemble prediction using LSTM with attention
-4. Display comparative plots for different batteries
 
+1. Load battery dataset
+2. Run anomaly detection
+3. Train SoC model
+4. Train SoH model
+5. Train RUL model
+6. Train EV Range ensemble model
+7. Generate predictions
+8. Plot degradation curves
+9. Show performance metrics
 
-### 4. Results and Outputs
-All generated plots and model outputs are saved in the `assets` folder:
+---
+
+#  Output Visualizations
+
+The pipeline generates:
+
+* EV Range Prediction Plot
+* SoH Degradation Curve
+* RUL Prediction Curve
+* Anomaly Detection Plot
+* Actual vs Predicted Graph
+* Ensemble Model Comparison
+
+All outputs saved in:
+
 ```
-├── assets/
-│   └── results/         # Performance metrics visualizations
+assets/
+ ├── EV_Range_Prediction.png
+ ├── degradation_overview.png
+ ├── rul_prediction.png
+ └── model_performance.png
 ```
 
-## Project Structure
+---
+
+#  Project Structure
 
 ```
+EV_Battery_Project
+│
 ├── Code/
-│   ├── main.py           # Main implementation
-│   ├── requirements.txt  # Dependencies
-│   ├── Mamba.ipynb    # MambaNet training implementation
-│   ├── AutoReformer.ipynb # AutoReformer training implementation
-│   ├── Dlinear.ipynb  # DLinear training implementation
-│   └── XLSTM.ipynb    # XLSTM training implementation
+│   ├── main.py
+│   ├── EV_project_ml.ipynb
+│   ├── requirements.txt
+│   ├── README.md
+│
 ├── data/
-│   ├── download_dataset.sh  # Dataset/model downloader
-│   └── downloaded_files/    # Downloaded models and data
-├── assets/               # Output graphs and comparision with Model from research paper Transformer network for remaining useful life prediction of lithium-ion batteries(2022) and visualizations and Presentation
+│   ├── battery_dataset.csv
+│   └── cleaned_battery_data.pkl
+│
+├── assets/
+│   ├── plots
+│   └── results
 ```
 
-#### Model Performance Comparison
-![Model Comparison](assets/Final_Output.jpg)
-*Figure 1: Comparison of prediction accuracy across different batteries*
+---
 
-![Model Comparison](assets/Comparison_Output.jpg)
-*Figure 2: Comparison with recent Research Model predicitions*
+#  Features Used
 
-## System Requirements
+The models use:
 
-- Python 3.8+
-- CUDA toolkit (optional, for GPU support)
-- 8GB RAM minimum
-- 2GB disk spaces
+* Voltage
+* Current
+* Temperature
+* Cycle count
+* Capacity
+* Internal resistance
+* Charge time
+* Discharge time
+
+---
+
+#  Example Output
+
+```
+Anomaly Detected : False
+Predicted SoC : 0.84
+Predicted SoH : 0.91
+Predicted RUL : 52 cycles
+Predicted EV Range : 253.5 km
+```
+
+---
+
+#  Key Highlights
+
+✔ End-to-end EV battery pipeline
+✔ Anomaly detection included
+✔ Hybrid deep learning + ML ensemble
+✔ Residual neural network architecture
+✔ LSTM time-series modeling
+✔ High accuracy (R² = 0.997 EV range)
+✔ Real-world battery degradation modeling
+✔ Clean modular architecture
+
+---
+
+#  System Requirements
+
+Python 3.8+
+8GB RAM minimum
+GPU optional (CUDA supported)
+2GB disk space
+
+---
+
+#  Future Improvements
+
+* Real-time EV dashboard
+* IoT battery monitoring
+* Cloud deployment
+* Mobile app integration
+* Transformer-based RUL model
+
+---
+
+#  Project Demonstration
+
+The system predicts:
+
+* Battery degradation
+* Remaining battery life
+* EV driving range
+* Charging efficiency
+* Battery anomalies
+
+This project can be used for:
+
+* Electric vehicles
+* Battery management systems
+* Smart charging stations
+* EV fleet analytics
+
+---
+
+#  License
+
+This project is for academic and research purposes only.
