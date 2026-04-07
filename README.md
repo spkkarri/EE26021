@@ -11,6 +11,19 @@ Backend: FastAPI (Dockerized on Hugging Face Spaces)
 
 ---
 
+## 🏗️ Architecture
+
+| Component        | Value   |
+|------------------|--------|
+| Token Embedding Dimensions  | 512   |
+| Total Parameters  | 51.1 Million   |
+| Transformer Block Layers          | 8      |
+| Attention Heads | 8      |
+| Context Length  | 256    |
+| Vocabulary Size | 50,257 |
+
+---
+
 ## Project Highlights
 
 ### ⚡ **DDP training across 2 GPUs**  
@@ -27,18 +40,6 @@ Backend: FastAPI (Dockerized on Hugging Face Spaces)
 
 ### 🌐 **Full pipeline: Training → Containerization → API → Client UI**  
   Built and deployed a complete system — covering training, Dockerized containerization, API inference, and frontend delivery.
-
----
-
-## 🏗️ Architecture
-
-| Component        | Value   |
-|------------------|--------|
-| Token Embedding Dimensions  | 512    |
-| Transformer Block Layers          | 8      |
-| Attention Heads | 8      |
-| Context Length  | 256    |
-| Vocabulary Size | 50,257 |
 
 ---
 
