@@ -1,13 +1,20 @@
-# femto-GPT
+# femto-GPT 51.1M
+### Self-Attention · Decoder-Only Transformer Architecture · Language Modeling
 
-> Lightweight GPT-style language model built from scratch, trained on multiple datasets, and deployed as a full end-to-end system.
+[![Python](https://img.shields.io/badge/python-3.10+-blue)]()
+[![PyTorch](https://img.shields.io/badge/framework-PyTorch-red)]()
+[![FastAPI](https://img.shields.io/badge/backend-FastAPI-green)]()
+[![Hugging Face](https://img.shields.io/badge/deployment-HuggingFace-yellow)]()
+[![Vercel](https://img.shields.io/badge/frontend-Vercel-black)]()
+[![LoRA](https://img.shields.io/badge/fine--tuning-LoRA-purple)]()
+[![DDP](https://img.shields.io/badge/training-DDP%202%20GPUs-orange)]()
 
 ---
 
+> Lightweight GPT-style language model built from scratch, trained on multiple datasets, and deployed as a full end-to-end system.
+
 ### **Live Demo (Web Page):** https://femto-gpt.vercel.app/
 Backend: FastAPI (Dockerized on Hugging Face Spaces)
-
-**Video Demo:** https://femto-gpt.vercel.app/
 
 ---
 
@@ -41,6 +48,80 @@ Backend: FastAPI (Dockerized on Hugging Face Spaces)
 ### 🌐 **Full pipeline: Training → Containerization → API → Client UI**  
   Built and deployed a complete system — covering training, Dockerized containerization, API inference, and frontend delivery.
 
+---
+
+## 🧠 Model Architecture
+
+```
+Input Text
+   │
+   ▼
+Tokenization (BPE)
+   │
+   ▼
+Token IDs ────────────────► Token Embedding (50257 × 512)
+                                   │
+                                   ▼
+                    + Positional Embedding (256 × 512)
+                                   │
+                                   ▼
+                                Dropout
+                                   │
+                                   ▼
+               ┌───────────────────────────────────────────────────────┐
+               │                 Transformer Block × 8                 │
+               │                                                       │
+               │   ┌───────────────────────────────────────────────┐   │
+               │   │               LayerNorm (ln1)                 │   │
+               │   └──────────────┬────────────────────────────────┘   │
+               │                  ▼                                    │
+               │        c_attn (Linear → 3 × n_embd)                   │
+               │                  │                                    │
+               │                  ▼                                    │
+               │           Split → Q, K, V                             │
+               │                  │                                    │
+               │                  ▼                                    │
+               │      Multi-Head Reshape + Transpose                   │
+               │                  │                                    │
+               │                  ▼                                    │
+               │        Scaled Dot-Product Attention                   │
+               │      softmax(QKᵀ / √d) with causal mask               │
+               │                  │                                    │
+               │                  ▼                                    │
+               │         Attention Output (att @ V)                    │
+               │                  │                                    │
+               │                  ▼                                    │
+               │       Merge Heads → c_proj (Linear)                   │
+               │                  │                                    │
+               │                  ▼                                    │
+               │           Residual Connection                         │
+               │                                                       │
+               │   ┌───────────────────────────────────────────────┐   │
+               │   │               LayerNorm (ln2)                 │   │
+               │   └──────────────┬────────────────────────────────┘   │
+               │                  ▼                                    │
+               │         MLP: c_fc → GELU → c_proj                     │
+               │                  │                                    │
+               │                  ▼                                    │
+               │            Residual Connection                        │
+               │                                                       │
+               └───────────────────────────────────────────────────────┘
+                                   │
+                                   ▼
+                           Final LayerNorm (ln_f)
+                                   │
+                                   ▼
+                  Linear Head (tied with embedding weights)
+                                   │
+                                   ▼
+                            Logits (50,257)
+                                   │
+                                   ▼
+                                Softmax
+                                   │
+                                   ▼
+                         Next Token Prediction
+```
 ---
 
 ## 🧠 Models
