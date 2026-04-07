@@ -66,5 +66,9 @@ Link =
 - `524113` – B.jagadeesh chandra pradesh  
 - `524114` – B.Omkar
 - `524121` – Ch.Sanyasi naidu
+---
+## 🤝 Contributing
+
+Open to feature suggestions, bug reports, or pull requests. Let’s build together!
 
 
