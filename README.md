@@ -7,12 +7,11 @@
 ### **Live Demo (Web Page):** https://femto-gpt.vercel.app/
 Backend: FastAPI (Dockerized on Hugging Face Spaces)
 
----
-### **Video Demo:** https://femto-gpt.vercel.app/
+**Video Demo:** https://femto-gpt.vercel.app/
 
 ---
 
-## ✨ Highlights
+## Project Highlights
 
 ### ⚡ **DDP training across 2 GPUs**  
   Introduced Distributed Data Parallel to overcome CUDA out-of-memory constraints and scale training by splitting workloads across two GPUs.
@@ -148,7 +147,7 @@ TinyStories — fiction passages and screenplay-style samples
    ↓
 [Client UI (Vercel hosted)]
    ↓
-[FastAPI Backend (HF Spaces)]
+[FastAPI Backend (Dockerized on Hugging Face Spaces)]
    ↓
 [Femto-GPT Models]
 ```
