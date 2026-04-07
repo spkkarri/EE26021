@@ -11,9 +11,9 @@ import subprocess
 import time
 from datetime import datetime
 
-# ============================================================================
+
 # CONFIGURATION
-# ============================================================================
+
 TARGET_SAMPLES = 500000
 TRAINING_STEPS = 200000
 GIF_FRAMES = 300
@@ -39,9 +39,8 @@ os.makedirs("logs", exist_ok=True)
 
 start_time = time.time()
 
-# ============================================================================
 # STEP 1: ADVANCED DATASET MANAGEMENT
-# ============================================================================
+
 print("\n" + "="*80)
 print("STEP 1: DATASET MANAGEMENT")
 print("="*80)
@@ -126,6 +125,7 @@ else:
         sys.exit(1)
 
 # Verify dataset after collection
+
 dataset_files = glob.glob("data/raw/dataset_*.pkl")
 if not dataset_files:
     print("\nERROR: Dataset collection failed - no dataset files found!")
@@ -157,9 +157,8 @@ if final_sample_count < TARGET_SAMPLES:
     if response.lower() != 'y':
         sys.exit(1)
 
-# ============================================================================
 # STEP 2: TRAIN MODEL AND CREATE OUTPUTS
-# ============================================================================
+
 print("\n" + "="*80)
 print("STEP 2: MODEL TRAINING AND OUTPUT GENERATION")
 print("="*80)
@@ -190,9 +189,9 @@ if result.returncode != 0:
 
 print(f"\nTraining completed in {training_time/60:.1f} minutes")
 
-# ============================================================================
+
 # STEP 3: RESULTS SUMMARY
-# ============================================================================
+
 print("\n" + "="*80)
 print("STEP 3: RESULTS SUMMARY")
 print("="*80)
@@ -245,9 +244,9 @@ print(f"  File:     {os.path.basename(latest_dataset)}")
 print(f"  Samples:  {final_sample_count:,}")
 print(f"  Size:     {os.path.getsize(latest_dataset)/(1024*1024):.2f} MB")
 
-# ============================================================================
+
 # STEP 4: LIVE DEMO (OPTIONAL)
-# ============================================================================
+
 print("\n" + "="*80)
 print("STEP 4: LIVE DEMO (OPTIONAL)")
 print("="*80)
@@ -258,9 +257,9 @@ if choice.lower() == 'y':
 else:
     print("\nYou can run live demo later with: python video.py")
 
-# ============================================================================
+
 # STEP 5: PRESENTATION GUIDE
-# ============================================================================
+
 print("\n" + "="*80)
 print("PRESENTATION GUIDE")
 print("="*80)
