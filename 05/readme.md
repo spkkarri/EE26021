@@ -33,7 +33,9 @@ files.upload()
 Then extract:
 
 import zipfile
+
 with zipfile.ZipFile("dataset.zip", 'r') as zip_ref:
+
     zip_ref.extractall("/content/dataset")
 
 ### 3. Run the Project
@@ -58,15 +60,19 @@ The output will show detected potholes with dimensions.
 ## Project Structure
 
 Code/
+
   pothole_detection.ipynb
   README.md
+  
 
 assets/
   PPT.pptx
   Report.pdf
+  
 
 data/
   dataset.zip
+  
 
 ## Model Performance
 
