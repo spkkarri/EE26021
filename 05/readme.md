@@ -6,7 +6,9 @@ Gaussian blur, thresholding, and contour detection.
 
 ## Team Members
 Srihitha Tirnati - 524183
+
 Kshirja Challa - 524143
+
 P Bhavya - 524163
 
 ## Project Explanation
