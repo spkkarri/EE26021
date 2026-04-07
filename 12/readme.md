@@ -102,7 +102,7 @@ data/                         # Shell script (download_dataset.sh) – optional
 - ###### Dataset Collection:
    500,000 samples collected with progressive difficulty (random → straight → moderate → aggressive → expert).
 - ###### PPO Optimisation:
- Hyperparameters tuned for MetaDrive (learning rate 2.5e-4, n_steps 4096, batch size 128, ent_coef 0.005).
+   Hyperparameters tuned for MetaDrive (learning rate 2.5e-4, n_steps 4096, batch size 128, ent_coef 0.005).
  
 ## System Requirements
 
