@@ -1,4 +1,3 @@
-
 #  Natural Language–Driven Agentic Web Information Retrieval System
 ## Solar Plant AI Planner
 
