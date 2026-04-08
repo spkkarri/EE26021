@@ -12,7 +12,7 @@ Multi-model ensemble pipeline for 24-hour ahead energy forecasting on the Liande
 
 ## Project Explanation
 
-Watch our project explanation: [Demo Link](https://drive.google.com/drive/folders/1mQfcM_POB2mKboAMvvA3vYlzTLE0Dh5i?usp=drive_link)
+Watch our project explanation: [Demo Link](https://www.youtube.com/playlist?list=PLEy5UeqTX7c0Lo2cGyRODQbCJTqFO3WPv)
 
 ---
 
