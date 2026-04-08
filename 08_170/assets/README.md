@@ -267,6 +267,53 @@ POST /lora-us-affairs/generate
 
 ---
 
+## 📂 Project Structure
+
+```
+.
+├── client/                     # Frontend (Client interface)
+│   ├── index.html
+│   └── execution.html
+│
+├── logs/                       # Training logs
+│   ├── fineweb_edu_logs.txt
+│   ├── lora_us_affairs_logs.txt
+│   └── tiny_stories_logs.txt
+│
+├── loss_curves/                # Training loss visualizations
+│   ├── fine_web_loss_curve.png
+│   ├── lora_us_affairs_loss_curve.png
+│   ├── tiny_stories_loss_curve.png
+│   └── postman.png
+│
+├── model_weights/              # Saved model checkpoints (not included in submission due to LFS fork restrictions)
+│   ├── ckpt_0015500_tiny_stories.pt
+│   ├── ckpt_0023000_fineweb_edu.pt
+│   └── lora_ckpt_0001000.pt
+│
+├── main.py                     # FastAPI app for inference
+├── model.py                    # Transformer / GPT architecture
+├── model_config.py             # Model hyperparameters
+├── data.py                     # Data loading & preprocessing
+│
+├── train.ipynb                 # Training notebook
+├── femto-gpt-tiny-stories.ipynb
+├── femto-gpt-fineweb-edu.ipynb
+├── femto-lora-us-affairs.ipynb
+│
+├── us_presidential.txt         # Dataset (example)
+├── requirements.txt            # Dependencies
+├── Dockerfile                  # Containerization setup
+├── README.md                   # Project report
+│
+└── __pycache__/
+```
+
+- `client/` provides a simple UI for interacting with the model.
+
+---
+
+
 ## 💡 Why Femto?
 
 Best name I could come up with while creating the repo xD
