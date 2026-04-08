@@ -1,0 +1,47 @@
+================================================================================
+SELF-DRIVING CAR - PROFESSIONAL SUMMARY REPORT
+Generated: 2026-04-05 22:24:54
+================================================================================
+
+1. DATASET INFORMATION
+   File name: dataset_500000_20260405_193130.pkl
+   Total samples: 500,000
+   File size: 544.18 MB
+
+2. MODEL INFORMATION
+   Algorithm: PPO (Proximal Policy Optimization)
+   Training steps: 200,000
+   Model file: self_driving_model_20260405_220803.zip
+   Hyperparameters:
+      - Learning rate: 0.0003
+      - Batch size: 64
+      - N steps: 2048
+      - Gamma: 0.99
+      - GAE lambda: 0.95
+      - Clip range: 0.2
+
+3. PERFORMANCE METRICS (Test Episodes)
+   Number of test episodes: 5
+   Average episode length: 169.0 steps
+   Average episode reward: 275.02
+   Best episode reward: 275.02
+   Overall mean reward per step: 1.6273
+   Overall total reward collected: 1375.11
+
+4. ACTION STATISTICS
+   Steering mean: -0.0556
+   Steering std: 0.2838
+   Throttle mean: 1.0000
+   Throttle std: 0.0000
+
+5. OUTPUT FILES GENERATED
+   - Performance GIF: performance_graph_20260405_220803.gif
+   - Analysis charts: analysis_charts_20260405_220803.png
+   - This summary report: summary_report_20260405_220803.txt
+
+6. SYSTEM CONFIGURATION
+   - Simulator: MetaDrive 0.4.3
+   - Framework: Stable-Baselines3
+   - Dataset collection: 500,000 samples with progressive difficulty
+   - Training duration: 20-30 minutes on CPU
+================================================================================
