@@ -312,7 +312,7 @@ POST /lora-us-affairs/generate
 - `client/` provides a simple UI for interacting with the model.
 
 ---
-
+Video explaination: https://drive.google.com/file/d/1KpLOOnpFqS5TCNEFCcAG7zlZukhNeS8m/view?usp=sharing
 
 ## 💡 Why Femto?
 
