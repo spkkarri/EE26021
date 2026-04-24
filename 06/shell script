@@ -1,0 +1,21 @@
+#!/bin/bash
+# =====================================
+# Shell script to run Microgrid Forecasting & RL code
+# =====================================
+
+# 1. Activate Python environment (optional, if using virtualenv/conda)
+# Uncomment and change 'myenv' to your environment name
+# echo "Activating virtual environment..."
+# source ~/anaconda3/bin/activate myenv
+
+# 2. Install required packages (optional, uncomment if needed)
+echo "Installing required Python packages..."
+pip install --upgrade pip
+pip install numpy pandas matplotlib scikit-learn tensorflow gym stable-baselines3
+
+# 3. Run the Python script
+echo "Running Microgrid Forecasting & RL Python script..."
+python3 microgrid_forecasting_rl.py
+
+# 4. Notify completion
+echo "Script finished running! Check outputs and plots."
