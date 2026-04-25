@@ -1,0 +1,14 @@
+import pandas as pd
+import io
+
+data = """
+temp,irradiance,humidity,wind-spd,p-output
+30,800,40,5,250
+32,850,38,6,270
+28,750,45,4,230
+35,900,35,7,300
+31,820,42,5,260
+29,780,44,4,240
+"""
+df_new = pd.read_csv(io.StringIO(data))
+print(df_new.head())

@@ -1,0 +1,13 @@
+import matplotlib.pyplot as plt
+
+time = [6,7,8,9,10,11,12,13,14,15,16,17]
+power_output = [0,50,120,200,280,350,400,380,320,250,150,60]
+
+plt.plot(time, power_output, marker='o')
+plt.xlabel("Time of Day (Hours)")
+plt.ylabel("Solar Power Output (W)")
+plt.title("Solar Panel Output vs Time")
+plt.grid(True)
+
+plt.savefig("solar_output_vs_time.png")
+plt.show()

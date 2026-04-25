@@ -1,98 +1,189 @@
-# Battery Life Prediction Project
+# Microgrid Energy Forecasting and Optimization Project
 
-This project implements various deep learning models (MambaNet, AutoReformer, DLinear, XLSTM) for battery life prediction.
-
-## Team Members
-- Mehul Jain (Team Lead) - 522206
-- Krishna Tayal - 522152
-- Shivam Kumar - 522242
-- Satya Pavan - 522146
-- Jayavarapu Varshitha - 522137
-- Devkinandan Shakywal - 522124
-
+This project implements a hybrid deep learning and reinforcement learning framework for **microgrid energy management**. It combines a CNN-LSTM model for forecasting renewable generation and load demand, along with a PPO-based reinforcement learning agent for optimized energy distribution.
 ## Project Explanation
 Watch our project explanation:
-[![Link]](https://youtu.be/syUTNftDMbQ?si=WCCgt6VHo51anUHa)
+https://youtu.be/fjA-_VL7jrc
+## Team Members
+
+* T.Teena Anjusha -  524182
+* N.Sai Ambika Akshaya-524154
+    •P.Manasa Varshini - 524160                                                                                                                                                                                                                                                                                                                                                    
+## Project Explanation
+This project consists of two major components:
+
+1. **Forecasting Module (CNN + LSTM)**
+
+   * Predicts:
+
+     * PV (Solar) Production
+     * Wind Production
+     * Electric Demand
+   * Uses time-series data with feature engineering (lag features, rolling mean, temporal features)
+
+2. **Optimization Module (Reinforcement Learning - PPO)**
+
+   * Learns optimal energy distribution between:
+
+     * Solar
+     * Wind
+     * Grid
+   * Maximizes renewable usage while ensuring demand satisfaction
 
 ## Setup Instructions
 
-### 1. Download Models and Dataset
+### 1. Dataset Preparation
 
-First, download the required .pth models and dataset using the provided bash script:
+Ensure you have the following CSV files:
 
-```bash
-cd data
-chmod +x download_dataset.sh
-./download_dataset.sh
-```
+* `microgrid_data.csv` → Used for forecasting model
+* `Database.csv` → Used for reinforcement learning environment
 
-This will create a `downloaded_files` directory containing:
-- Model weights (.pth files)
-  - Mamba.pth
-  - AutoReformer.pth
-  - Adv_Dlinear.pth
-  - XLSTM.pth
-- Dataset files
+Place them in the project root directory.
 
 ### 2. Install Requirements
 
-Install all required dependencies using pip:
+Install dependencies using pip:
 
 ```bash
-cd Code
-pip install -r requirements.txt
+pip install numpy pandas matplotlib scikit-learn tensorflow gym stable-baselines3
 ```
 
-Make sure you have CUDA installed if you want to use GPU acceleration.
+(Optional) Install GPU support:
+
+```bash
+pip install tensorflow-gpu
+```
 
 ### 3. Run the Project
 
-Execute the main script:
+Execute the script:
 
 ```bash
-cd Code
 python main.py
 ```
-The script will:
-1. Load the pre-trained models
-2. Generate predictions using each model
-3. Create an ensemble prediction using LSTM with attention
-4. Display comparative plots for different batteries
 
+The script will:
+
+1. Load and preprocess data
+2. Train CNN-LSTM forecasting model
+3. Evaluate predictions using MAE, RMSE, R²
+4. Train PPO reinforcement learning agent
+5. Optimize energy distribution
+6. Display graphs and performance metrics
 
 ### 4. Results and Outputs
-All generated plots and model outputs are saved in the `assets` folder:
+
+The project generates:
+
+* Training vs Validation Loss Curve
+* Load Forecasting Graph
+* Scatter Plot (Actual vs Predicted Load)
+* Energy Distribution Graph (Solar, Wind, Grid)
+* Reward Curve (RL Performance)
+
+Model file saved as:
+
 ```
-├── assets/
-│   └── results/         # Performance metrics visualizations
+final_microgrid_model.h5
 ```
 
 ## Project Structure
 
 ```
-├── Code/
-│   ├── main.py           # Main implementation
-│   ├── requirements.txt  # Dependencies
-│   ├── Mamba.ipynb    # MambaNet training implementation
-│   ├── AutoReformer.ipynb # AutoReformer training implementation
-│   ├── Dlinear.ipynb  # DLinear training implementation
-│   └── XLSTM.ipynb    # XLSTM training implementation
-├── data/
-│   ├── download_dataset.sh  # Dataset/model downloader
-│   └── downloaded_files/    # Downloaded models and data
-├── assets/               # Output graphs and comparision with Model from research paper Transformer network for remaining useful life prediction of lithium-ion batteries(2022) and visualizations and Presentation
+├── main.py                     # Full implementation (Forecasting + RL)
+├── microgrid_data.csv         # Forecasting dataset
+├── Database.csv               # RL dataset
+├── final_microgrid_model.h5   # Saved trained model
+├── assets/                    # Output graphs (optional if saved)
 ```
 
-#### Model Performance Comparison
-![Model Comparison](assets/Final_Output.jpg)
-*Figure 1: Comparison of prediction accuracy across different batteries*
+## Model Details
 
-![Model Comparison](assets/Comparison_Output.jpg)
-*Figure 2: Comparison with recent Research Model predicitions*
+### Forecasting Model (CNN + LSTM)
+
+* **Input Features:**
+
+  * Solar Irradiance (DHI, DNI, GHI)
+  * Weather (Temperature, Humidity, Wind Speed)
+  * Time Features (Hour, Day, Month)
+  * Encoded categorical variables
+  * Lag features & rolling mean
+
+* **Architecture:**
+
+  * Conv1D (feature extraction)
+  * Batch Normalization
+  * LSTM (temporal learning)
+  * Dense layers
+  * Dropout (regularization)
+
+* **Loss Function:** Mean Squared Error (MSE)
+
+### Reinforcement Learning Model (PPO)
+
+* **State Space:**
+
+  * Solar production
+  * Wind production
+  * Load demand
+
+* **Action Space:**
+
+  * Allocation weights for:
+
+    * Solar
+    * Wind
+    * Grid
+
+* **Reward Function Includes:**
+
+  * Demand-supply balance
+  * Renewable energy usage
+  * Grid usage penalty
+  * Incentives for efficient renewable utilization
+
+## Sample Output (Console)
+
+```
+Step 1
+Demand: 0.532
+Solar Used: 0.210
+Wind Used : 0.180
+Grid Used : 0.142
+Renewable %: 73.30%
+Reward: 14.23
+----------------------------------------
+```
+
+## Evaluation Metrics
+
+* MAE (Mean Absolute Error)
+* RMSE (Root Mean Squared Error)
+* R² Score (Model Accuracy)
 
 ## System Requirements
 
-- Python 3.8+
-- CUDA toolkit (optional, for GPU support)
-- 8GB RAM minimum
-- 2GB disk spaces
+* Python 3.8+
+* 8GB RAM minimum
+* GPU (optional but recommended)
+* 2GB Disk Space
+
+## Key Highlights
+
+* Hybrid AI approach (Deep Learning + Reinforcement Learning)
+* Realistic microgrid simulation without battery
+* Multi-output forecasting
+* Reward-engineered energy optimization
+* Scalable for smart grid applications
+
+## Future Improvements
+
+* Add battery storage optimization
+* Include real-time deployment
+* Integrate pricing and cost optimization
+* Use advanced RL models (SAC, TD3)
+
+## Conclusion
+
+This project demonstrates how AI can be effectively used to **forecast energy demand and optimize renewable energy utilization** in microgrids, contributing to smarter and more sustainable power systems.

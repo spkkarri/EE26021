@@ -1,98 +1,252 @@
-# Battery Life Prediction Project
 
-This project implements various deep learning models (MambaNet, AutoReformer, DLinear, XLSTM) for battery life prediction.
+#  Natural Language–Driven Agentic Web Information Retrieval System
+## Solar Plant AI Planner
 
-## Team Members
-- Mehul Jain (Team Lead) - 522206
-- Krishna Tayal - 522152
-- Shivam Kumar - 522242
-- Satya Pavan - 522146
-- Jayavarapu Varshitha - 522137
-- Devkinandan Shakywal - 522124
+**[Project Demo on YouTube](#)** *(https://youtu.be/WIfwOwRmu_w?si=Lg3IVOiFYgo4i-iA)*
 
-## Project Explanation
-Watch our project explanation:
-[![Link]](https://youtu.be/syUTNftDMbQ?si=WCCgt6VHo51anUHa)
+---
 
-## Setup Instructions
+##  Project Overview
 
-### 1. Download Models and Dataset
+The **Solar Plant AI Planner** is an intelligent, multimodal web scraping agent that takes land coordinates or location name as input and automatically calculates solar plant requirements, real-time costs, ROI analysis, and feasibility — powered by LLM-based reasoning and multi-source data scraping.
 
-First, download the required .pth models and dataset using the provided bash script:
+The system combines **Natural Language Processing**, **Agentic Web Scraping**, and **Multimodal AI** to deliver actionable solar investment reports for any location in India.
+
+---
+
+##  Team Members
+
+| Name | Role | Roll No. |
+|------|------|----|
+| Vedant | Team Lead | 524188 |
+| Shriya Rathaur | Team Member | 524175 |
+| Sai Charan | Team Member  | 524158 |
+
+---
+
+##  Key Features
+
+###  Multi-Source Real-Time Scraping
+Scrapes live data from multiple sources simultaneously:
+- **NASA POWER API** — Historical solar radiation & peak sun hours
+- **PVGIS (EU Commission)** — Solar energy yield per location
+- **Open-Meteo** — Live weather, temperature, cloud cover, UV index
+- **Kenbrook Solar** — Real panel and inverter market prices
+- **Bijli Bachao** — State-wise electricity tariff rates
+- **OpenStreetMap** — Coordinate geocoding and reverse geocoding
+
+###  Intelligent AI Analysis
+- LLaMA 3.3 70B via Groq API for expert solar analysis
+- Auto-detects location from name or coordinates
+- Seasonal variation analysis (Summer / Monsoon / Winter PSH)
+- PM Surya Ghar Yojana subsidy recommendations
+- Optimal panel tilt angle calculation
+
+###  Smart Location Detection
+- Enter **coordinates** → system maps location and finds state
+- Enter **location name** → system auto-finds exact lat/lon
+- Interactive OpenStreetMap showing your exact land
+
+###  Feedback-Based Learning (RLHF)
+- Users rate predictions as correct or wrong
+- System stores corrections for nearby locations
+- AI improves future predictions using past feedback
+- Tracks accuracy statistics over time
+
+###  User-Friendly Web Interface
+- Flask-based real-time web UI
+- No manual electricity rate input needed — auto-scraped by state
+- Live weather cards and solar data badges
+- Equipment list with live Kenbrook prices
+
+---
+
+##  Technical Architecture
+
+### Core Components
+
+**Web Scraping Layer**
+- BeautifulSoup4 + Requests for HTML parsing
+- Multi-source parallel scraping (NASA, PVGIS, Kenbrook, Bijli Bachao)
+- Geocoding via Nominatim OpenStreetMap API
+
+**Solar Calculation Engine**
+- Peak Sun Hours averaged from NASA + PVGIS for accuracy
+- Cloud cover correction factor applied to effective PSH
+- Panel count formula: `(Area × 0.70) ÷ 1.7 sqm`
+- ROI calculation using auto-scraped electricity rates
+
+**LLM Integration**
+- Groq LLaMA 3.3 70B for natural language analysis
+- Location-specific recommendations
+- Past feedback injected into prompts for learning
+
+**Feedback System**
+- JSON-based feedback storage
+- Nearby location matching (within 1° radius)
+- Accuracy tracking dashboard
+
+---
+
+##  Technology Stack
+
+| Layer | Tools Used |
+|-------|-----------|
+| Backend | Python 3.10+, Flask, Requests, BeautifulSoup4 |
+| AI / LLM | Groq API, LLaMA 3.3 70B (free tier) |
+| Solar Data | NASA POWER API, PVGIS EU API |
+| Weather | Open-Meteo API |
+| Geocoding | OpenStreetMap Nominatim |
+| Price Scraping | Kenbrook Solar, Bijli Bachao |
+| Maps | OpenStreetMap Embed |
+| Feedback | JSON-based RLHF storage |
+
+---
+
+##  Setup Instructions
+
+###  Prerequisites
+- Python 3.10+
+- Internet connection
+- Free Groq API key
+- Git
+
+###  Installation
 
 ```bash
-cd data
-chmod +x download_dataset.sh
-./download_dataset.sh
+git clone [your-repository-url]
+cd WebScrapingAgent
+pip install flask groq requests beautifulsoup4
 ```
 
-This will create a `downloaded_files` directory containing:
-- Model weights (.pth files)
-  - Mamba.pth
-  - AutoReformer.pth
-  - Adv_Dlinear.pth
-  - XLSTM.pth
-- Dataset files
+###  API Key Configuration
 
-### 2. Install Requirements
+Open `solar.py` and replace line 7:
 
-Install all required dependencies using pip:
+```python
+GROQ_KEY = "paste_your_gsk_key_here"
+```
+
+Get your free key at [console.groq.com](https://console.groq.com) → API Keys → Create API Key
+
+### ▶️ Running the Application
 
 ```bash
-cd Code
-pip install -r requirements.txt
+python solar.py
 ```
 
-Make sure you have CUDA installed if you want to use GPU acceleration.
+Then visit: `http://127.0.0.1:5000`
 
-### 3. Run the Project
+---
 
-Execute the main script:
+##  Usage Guide
 
-```bash
-cd Code
-python main.py
+###  Enter Location
+Enter coordinates directly OR just type a location name:
 ```
-The script will:
-1. Load the pre-trained models
-2. Generate predictions using each model
-3. Create an ensemble prediction using LSTM with attention
-4. Display comparative plots for different batteries
-
-
-### 4. Results and Outputs
-All generated plots and model outputs are saved in the `assets` folder:
-```
-├── assets/
-│   └── results/         # Performance metrics visualizations
+Option 1: Latitude 17.9784, Longitude 79.5300
+Option 2: Type "NIT Warangal, Telangana"
 ```
 
-## Project Structure
+###  Configure Project
+- Area in square meters (e.g. 1000)
+- Panel type: Monocrystalline / Polycrystalline / Thin Film
+- Project type: Residential / Commercial / Industrial / Agricultural
+
+###  Get AI Report
+Click **Scrape All Sources + AI Report + Map** and wait 30-60 seconds.
+
+The system will:
+1. Auto-find coordinates from location name
+2. Scrape NASA POWER + PVGIS solar data
+3. Fetch live weather at those coordinates
+4. Scrape Kenbrook Solar panel prices
+5. Auto-detect state electricity rate
+6. Generate full AI analysis with ROI
+
+###  Feedback and Learning
+Rate the prediction accuracy using thumbs up / thumbs down.
+Add corrections like "Actual PSH was 4.2h not 5.0h".
+The AI uses this to improve future nearby predictions.
+
+---
+
+##  Calculation Formula
 
 ```
-├── Code/
-│   ├── main.py           # Main implementation
-│   ├── requirements.txt  # Dependencies
-│   ├── Mamba.ipynb    # MambaNet training implementation
-│   ├── AutoReformer.ipynb # AutoReformer training implementation
-│   ├── Dlinear.ipynb  # DLinear training implementation
-│   └── XLSTM.ipynb    # XLSTM training implementation
-├── data/
-│   ├── download_dataset.sh  # Dataset/model downloader
-│   └── downloaded_files/    # Downloaded models and data
-├── assets/               # Output graphs and comparision with Model from research paper Transformer network for remaining useful life prediction of lithium-ion batteries(2022) and visualizations and Presentation
+Panels Required   = (Area × 0.70) ÷ 1.7
+Capacity (kW)     = Panels × 0.4
+Daily Output      = Capacity × Effective PSH × Panel Efficiency
+Yearly Output     = Daily Output × 365
+Yearly Income     = Yearly Output × Electricity Rate (auto-scraped)
+Total Investment  = (Panels + Inverter + Cables + Mount + Battery + Install) × 1.10
+ROI Years         = Total Investment ÷ Yearly Income
 ```
 
-#### Model Performance Comparison
-![Model Comparison](assets/Final_Output.jpg)
-*Figure 1: Comparison of prediction accuracy across different batteries*
+**Panel Efficiency:** Monocrystalline 100% | Polycrystalline 85% | Thin Film 70%
 
-![Model Comparison](assets/Comparison_Output.jpg)
-*Figure 2: Comparison with recent Research Model predicitions*
+---
 
-## System Requirements
+##  Project Structure
 
-- Python 3.8+
-- CUDA toolkit (optional, for GPU support)
-- 8GB RAM minimum
-- 2GB disk spaces
+```
+WebScrapingAgent/
+├── solar.py              # Main Flask application (Solar AI Planner)
+├── app.py                # General web scraping agent
+├── agent.py              # Core scraping + BeautifulSoup module
+├── feedback_data.json    # RLHF feedback storage (auto-created)
+├── results_*.txt         # Auto-saved scraping results
+└── README.md             # This file
+```
+
+---
+
+##  Sample Output
+
+```
+Location   : NIT Warangal, Telangana
+Coordinates: 17.9784, 79.5300
+NASA PSH   : 5.47h/day | PVGIS: 5.31h/day | Final: 5.39h/day
+Elec Rate  : Rs 7.00/kWh (Telangana) — auto scraped
+Panel Price: Rs 18,500/unit (Kenbrook Solar)
+
+Panels Required : 411 units
+Total Capacity  : 164 kW
+Daily Output    : 885 kWh/day
+Yearly Income   : Rs 22.6 Lakhs/year
+Total Investment: Rs 1.85 Crore
+ROI Recovery    : 8.2 years
+25 Year Earnings: Rs 5.65 Crore
+CO2 Saved/Year  : 295 Tonnes
+```
+
+---
+
+##  Future Enhancements
+
+-  Database storage for prediction history
+-  Real-time panel price API integration
+-  Multi-language support (Telugu, Hindi)
+-  Cloud deployment (AWS / GCP)
+-  Mobile-responsive UI
+-  PDF report generation
+-  Battery sizing optimization module
+
+---
+
+##  Contributing
+
+Open to feature suggestions, bug reports, or pull requests. Let's build together!
+
+---
+
+##  Notes
+
+- Prices are estimates — always get 3 quotes before purchasing
+- NASA POWER API takes 15-30 seconds to respond
+- Groq free tier has rate limits — avoid rapid repeated requests
+
+
+---
+
+*Built with Python · Flask · Groq LLaMA 3.3 · NASA POWER · PVGIS · BeautifulSoup4 · OpenStreetMap*

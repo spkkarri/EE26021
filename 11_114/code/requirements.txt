@@ -1,0 +1,8 @@
+python libaries :
+numpy
+pandas
+framework :
+pytorch
+machine learning libaries:
+scikit-Learn
+matplotlib

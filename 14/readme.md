@@ -1,98 +1,102 @@
-# Battery Life Prediction Project
+# ⚡ Solar Power Output Prediction
 
-This project implements various deep learning models (MambaNet, AutoReformer, DLinear, XLSTM) for battery life prediction.
+## 📌 Project Description
 
-## Team Members
-- Mehul Jain (Team Lead) - 522206
-- Krishna Tayal - 522152
-- Shivam Kumar - 522242
-- Satya Pavan - 522146
-- Jayavarapu Varshitha - 522137
-- Devkinandan Shakywal - 522124
+This project predicts the output power of a solar panel using environmental factors like solar irradiance and temperature. Machine learning techniques are used to estimate power generation accurately.
 
-## Project Explanation
-Watch our project explanation:
-[![Link]](https://youtu.be/syUTNftDMbQ?si=WCCgt6VHo51anUHa)
+---
 
-## Setup Instructions
+## 🎯 Objective
 
-### 1. Download Models and Dataset
+* To analyze solar input parameters
+* To predict solar panel output power
+* To visualize the relationship between variables
 
-First, download the required .pth models and dataset using the provided bash script:
+---
 
-```bash
-cd data
-chmod +x download_dataset.sh
-./download_dataset.sh
+## 🛠️ Technologies Used
+
+* Python
+* NumPy
+* Pandas
+* Matplotlib
+* Scikit-learn
+
+---
+
+## 📂 Project Structure
+
+```
+Code/
+ ├── main.py
+ ├── README.md
+ └── requirements.txt
+
+assets/
+ ├── ppt.pptx
+ └── report.pdf
+
+data/
+ └── download.sh
 ```
 
-This will create a `downloaded_files` directory containing:
-- Model weights (.pth files)
-  - Mamba.pth
-  - AutoReformer.pth
-  - Adv_Dlinear.pth
-  - XLSTM.pth
-- Dataset files
+---
 
-### 2. Install Requirements
+## ▶️ How to Run the Project
 
-Install all required dependencies using pip:
+1. Clone the repository
+2. Install required libraries:
 
-```bash
-cd Code
+```
 pip install -r requirements.txt
 ```
 
-Make sure you have CUDA installed if you want to use GPU acceleration.
+3. Run the program:
 
-### 3. Run the Project
-
-Execute the main script:
-
-```bash
-cd Code
+```
 python main.py
 ```
-The script will:
-1. Load the pre-trained models
-2. Generate predictions using each model
-3. Create an ensemble prediction using LSTM with attention
-4. Display comparative plots for different batteries
 
+---
 
-### 4. Results and Outputs
-All generated plots and model outputs are saved in the `assets` folder:
+## 📊 Output
+
+* Graph showing solar irradiance vs power output
+* Predicted values using regression model
+
+---
+
+## 📦 Dataset
+
+Dataset is downloaded using the script in the `data/` folder.
+
+Run:
+
 ```
-├── assets/
-│   └── results/         # Performance metrics visualizations
-```
-
-## Project Structure
-
-```
-├── Code/
-│   ├── main.py           # Main implementation
-│   ├── requirements.txt  # Dependencies
-│   ├── Mamba.ipynb    # MambaNet training implementation
-│   ├── AutoReformer.ipynb # AutoReformer training implementation
-│   ├── Dlinear.ipynb  # DLinear training implementation
-│   └── XLSTM.ipynb    # XLSTM training implementation
-├── data/
-│   ├── download_dataset.sh  # Dataset/model downloader
-│   └── downloaded_files/    # Downloaded models and data
-├── assets/               # Output graphs and comparision with Model from research paper Transformer network for remaining useful life prediction of lithium-ion batteries(2022) and visualizations and Presentation
+bash download.sh
 ```
 
-#### Model Performance Comparison
-![Model Comparison](assets/Final_Output.jpg)
-*Figure 1: Comparison of prediction accuracy across different batteries*
+---
 
-![Model Comparison](assets/Comparison_Output.jpg)
-*Figure 2: Comparison with recent Research Model predicitions*
+## 🎥 YouTube Demo
 
-## System Requirements
+👉 https://youtu.be/YOglXBm57oA
 
-- Python 3.8+
-- CUDA toolkit (optional, for GPU support)
-- 8GB RAM minimum
-- 2GB disk spaces
+---
+
+## 👨‍💻 Team Details
+
+* Team Number: 02
+* Team Members:
+
+  * G. Chaitanya Sai (524128)(lead)
+  * K.Gokul Sai (524138)
+
+
+---
+
+## ✅ Conclusion
+
+This project demonstrates how machine learning can be used to efficiently predict solar power output, which is useful for renewable energy optimization.
+
+---

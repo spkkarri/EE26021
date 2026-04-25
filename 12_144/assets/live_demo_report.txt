@@ -1,0 +1,16 @@
+======================================================================
+SELF-DRIVING CAR – LIVE DEMO REPORT
+Model: self_driving_model_20260404_005550.zip
+Date: 2026-04-07 21:05:33
+======================================================================
+
+Steps: 168
+Total reward: 272.02
+Average reward: 1.62
+Duration: 28.9 seconds
+Termination reason: Reached destination (SUCCESS)
+
+Mean steering: -0.0995
+Mean throttle: 1.0000
+Max reward: 2.42
+Min reward: -5.00
