@@ -1,0 +1,67 @@
+[
+  {
+    "question": "What is photosynthesis? Explain the process and its importance.",
+    "references": [
+      "Photosynthesis is a biological process by which plants, algae, and some bacteria convert light energy, usually from the sun, into chemical energy stored in glucose. The process occurs in two stages: the light-dependent reactions in the thylakoid membranes, which capture solar energy and produce ATP and NADPH; and the light-independent reactions (Calvin cycle) in the stroma, which use that energy to fix carbon dioxide into organic molecules. The overall equation is: 6CO2 + 6H2O + light energy → C6H12O6 + 6O2. Photosynthesis is vital because it produces oxygen for respiration and forms the base of most food chains.",
+      "Photosynthesis converts sunlight into glucose using carbon dioxide and water, releasing oxygen as a byproduct. It takes place in the chloroplasts of plant cells, specifically using chlorophyll pigments. This process is fundamental to life on Earth as it provides energy for nearly all ecosystems."
+    ],
+    "student_answers": [
+      {
+        "text": "Photosynthesis is the process by which plants make their own food using sunlight. They take in carbon dioxide from the air and water from the soil, and using chlorophyll in their leaves, they convert these into glucose and release oxygen. This is important because it provides oxygen for animals to breathe and forms the basis of food chains.",
+        "human_score": 7.5,
+        "notes": "Good answer, mentions key inputs/outputs, lacks detail on light-dependent vs independent reactions"
+      },
+      {
+        "text": "Photosynthesis happens in plants. Plants absorb sunlight to make glucose. Oxygen is released. It is important for life.",
+        "human_score": 3.0,
+        "notes": "Very brief, missing key concepts like CO2, water, chlorophyll, location"
+      },
+      {
+        "text": "Photosynthesis is when plants use sunlight to produce energy. Plants absorb oxygen during this process and release carbon dioxide. The energy is stored as ATP. This process occurs in mitochondria.",
+        "human_score": 2.0,
+        "notes": "Contains factual errors — oxygen absorbed, CO2 released is the reverse; mitochondria is wrong"
+      },
+      {
+        "text": "Photosynthesis is a complex biochemical process occurring in chloroplasts where light-dependent reactions in the thylakoid membranes produce ATP and NADPH through photophosphorylation, while the Calvin cycle in the stroma fixes atmospheric CO2 into triose phosphate using the enzyme RuBisCO. The Z-scheme of electron transport involves Photosystems I and II. Glucose synthesis requires 18 ATP and 12 NADPH per glucose molecule. This process sustains virtually all life on Earth by producing organic carbon and releasing molecular oxygen, supporting aerobic respiration across kingdoms.",
+        "human_score": 9.5,
+        "notes": "Excellent detail, covers both reaction stages, mentions specific enzymes and molecules"
+      }
+    ]
+  },
+  {
+    "question": "Explain Newton's Second Law of Motion with an example.",
+    "references": [
+      "Newton's Second Law of Motion states that the acceleration of an object is directly proportional to the net force acting on it and inversely proportional to its mass. Mathematically, F = ma, where F is net force in Newtons, m is mass in kilograms, and a is acceleration in metres per second squared. For example, pushing a shopping cart with twice the force doubles its acceleration, while a heavier cart accelerates less for the same force. The law explains why heavier objects require more force to accelerate at the same rate."
+    ],
+    "student_answers": [
+      {
+        "text": "Newton's Second Law says that force equals mass times acceleration, written as F = ma. This means if you apply more force to an object, it accelerates more, and if the object is heavier, the same force gives less acceleration. For example, kicking a football harder makes it go faster.",
+        "human_score": 7.0,
+        "notes": "Covers the formula and relationship, good example, doesn't mention units"
+      },
+      {
+        "text": "Newton's second law is about force and motion. The law says heavier objects move slower. F=ma is the formula.",
+        "human_score": 4.0,
+        "notes": "Has the formula but explanation is incomplete and slightly imprecise"
+      }
+    ]
+  },
+  {
+    "question": "Describe the causes and consequences of the French Revolution.",
+    "references": [
+      "The French Revolution (1789–1799) was caused by a combination of financial crisis, social inequality under the Estates system, Enlightenment ideas promoting liberty and equality, food shortages, and weak leadership under Louis XVI. The bourgeoisie and peasant class were heavily taxed while the nobility and clergy were largely exempt. Consequences included the abolition of the monarchy and feudalism, the Declaration of the Rights of Man, the Reign of Terror, and ultimately Napoleon's rise to power. The Revolution spread democratic and nationalist ideals across Europe."
+    ],
+    "student_answers": [
+      {
+        "text": "The French Revolution happened because people were unhappy with the king. There was also not enough food and taxes were very high. The revolution led to the king being executed and France becoming a republic. It also inspired other countries to fight for freedom.",
+        "human_score": 5.5,
+        "notes": "Covers basics, lacks detail on Estates system, Enlightenment, Napoleon"
+      },
+      {
+        "text": "The French Revolution was caused by financial bankruptcy of the state, the rigid Estates system that placed the tax burden on the Third Estate, Enlightenment philosophy questioning divine right of kings, and a series of crop failures causing widespread famine. Consequences were profound: feudalism was abolished, the Declaration of the Rights of Man was issued, the Reign of Terror claimed thousands of lives, and the Revolution eventually gave rise to Napoleon Bonaparte. Its ideological impact spread democratic republicanism across Europe.",
+        "human_score": 9.0,
+        "notes": "Comprehensive coverage of causes and consequences"
+      }
+    ]
+  }
+]

@@ -1,98 +1,104 @@
-# Battery Life Prediction Project
+# ♟️ Human-Centric Chess AI (ChessGPT)
 
-This project implements various deep learning models (MambaNet, AutoReformer, DLinear, XLSTM) for battery life prediction.
+> NIT Andhra Pradesh | EE2621 Introduction to Machine Learning
+# Rajiv Rajpoot (524166)
+# Anand Pal(524109)
+# Raj Pandey(524165)
 
-## Team Members
-- Mehul Jain (Team Lead) - 522206
-- Krishna Tayal - 522152
-- Shivam Kumar - 522242
-- Satya Pavan - 522146
-- Jayavarapu Varshitha - 522137
-- Devkinandan Shakywal - 522124
+# Project Demo Video link
+https://drive.google.com/drive/folders/18yfmvwLHsPjRX8T78bxDBuYRpmSyixzI?usp=sharing
 
-## Project Explanation
-Watch our project explanation:
-[![Link]](https://youtu.be/syUTNftDMbQ?si=WCCgt6VHo51anUHa)
+A full-stack AI system that predicts human-like chess moves, evaluates gameplay using Centipawn Loss (CPL), and estimates player ELO.
 
-## Setup Instructions
+---
 
-### 1. Download Models and Dataset
+## 🚀 Features
 
-First, download the required .pth models and dataset using the provided bash script:
+- Transformer-based Chess Model (ChessGPT)
+- Human-like move prediction
+- Centipawn Loss (CPL) evaluation
+- Move + Score dual prediction
+- ELO estimation
+- Streamlit UI
+- Stockfish integration
 
-```bash
-cd data
-chmod +x download_dataset.sh
-./download_dataset.sh
+---
+
+## 📂 Project Structure
+
+```
+.
+├── data/
+├── checkpoints/
+├── model.py
+├── config.py
+├── train.py
+├── parse_pgn.py
+├── analysis.py
+├── chess_app.py
+└── README.md
 ```
 
-This will create a `downloaded_files` directory containing:
-- Model weights (.pth files)
-  - Mamba.pth
-  - AutoReformer.pth
-  - Adv_Dlinear.pth
-  - XLSTM.pth
-- Dataset files
+---
 
-### 2. Install Requirements
-
-Install all required dependencies using pip:
+## ⚙️ Installation
 
 ```bash
-cd Code
+git clone <your-repo-link>
+cd chess-ai
 pip install -r requirements.txt
 ```
 
-Make sure you have CUDA installed if you want to use GPU acceleration.
+---
 
-### 3. Run the Project
+## ▶️ Usage
 
-Execute the main script:
-
+### Data Preparation
 ```bash
-cd Code
-python main.py
-```
-The script will:
-1. Load the pre-trained models
-2. Generate predictions using each model
-3. Create an ensemble prediction using LSTM with attention
-4. Display comparative plots for different batteries
-
-
-### 4. Results and Outputs
-All generated plots and model outputs are saved in the `assets` folder:
-```
-├── assets/
-│   └── results/         # Performance metrics visualizations
+python parse_pgn.py
 ```
 
-## Project Structure
-
-```
-├── Code/
-│   ├── main.py           # Main implementation
-│   ├── requirements.txt  # Dependencies
-│   ├── Mamba.ipynb    # MambaNet training implementation
-│   ├── AutoReformer.ipynb # AutoReformer training implementation
-│   ├── Dlinear.ipynb  # DLinear training implementation
-│   └── XLSTM.ipynb    # XLSTM training implementation
-├── data/
-│   ├── download_dataset.sh  # Dataset/model downloader
-│   └── downloaded_files/    # Downloaded models and data
-├── assets/               # Output graphs and comparision with Model from research paper Transformer network for remaining useful life prediction of lithium-ion batteries(2022) and visualizations and Presentation
+### Train Model
+```bash
+python train.py
 ```
 
-#### Model Performance Comparison
-![Model Comparison](assets/Final_Output.jpg)
-*Figure 1: Comparison of prediction accuracy across different batteries*
+### Run Analysis
+```bash
+python analysis.py
+```
 
-![Model Comparison](assets/Comparison_Output.jpg)
-*Figure 2: Comparison with recent Research Model predicitions*
+### Run UI
+```bash
+streamlit run chess_app.py
+```
 
-## System Requirements
+---
 
-- Python 3.8+
-- CUDA toolkit (optional, for GPU support)
-- 8GB RAM minimum
-- 2GB disk spaces
+## 📊 Metrics
+
+- Accuracy (Top-1, Top-5)
+- ACPL (Average CPL)
+- Move Agreement
+- CPL Distribution
+
+---
+
+## 🧠 Tech Stack
+
+- Python
+- PyTorch
+- NumPy
+- Streamlit
+- Stockfish
+
+---
+
+## 📌 Notes
+
+- Uses Lichess PGN dataset
+- Filters applied: ELO, moves, time control
+- Designed for human-like play prediction
+
+
+

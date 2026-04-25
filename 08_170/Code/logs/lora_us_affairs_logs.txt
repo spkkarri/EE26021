@@ -1,0 +1,123 @@
+6.6s 1 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+6.6s 2 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+6.6s 3 0.00s - to python to disable frozen modules.
+6.6s 4 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+7.2s 5 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+7.2s 6 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+7.2s 7 0.00s - to python to disable frozen modules.
+7.2s 8 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+18.2s 9 Loading text file...
+18.2s 10 Total characters in text: 238,831
+18.2s 11 Total tokens: 41,569
+18.2s 12 Saved train.bin (39,490 tokens) and val.bin (2,079 tokens)
+21.3s 13 `trust_remote_code` is not supported anymore.
+21.3s 14 Please check that the Hugging Face dataset 'HuggingFaceFW/fineweb-edu' isn't based on a loading script and remove `trust_remote_code`.
+21.3s 15 If the dataset is based on a loading script, please ask the dataset author to remove it and convert it to a standard format like Parquet.
+21.3s 16 
+21.3s 17 `trust_remote_code` is not supported anymore.
+21.3s 18 Please check that the Hugging Face dataset 'HuggingFaceFW/fineweb-edu' isn't based on a loading script and remove `trust_remote_code`.
+21.3s 19 If the dataset is based on a loading script, please ask the dataset author to remove it and convert it to a standard format like Parquet.
+21.5s 20 Streaming FineWeb-Edu...
+22.8s 21 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+22.8s 22 
+22.8s 23 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+24.5s 24 0.0M train | 0.0M val
+29.6s 25 5.2M train | 0.0M val
+34.3s 26 10.3M train | 0.0M val
+38.6s 27 15.3M train | 0.0M val
+42.6s 28 20.7M train | 0.0M val
+46.7s 29 26.7M train | 0.0M val
+50.5s 30 32.0M train | 0.0M val
+54.0s 31 36.8M train | 0.0M val
+57.6s 32 41.8M train | 0.0M val
+61.4s 33 47.2M train | 0.0M val
+65.2s 34 52.7M train | 0.0M val
+68.8s 35 57.9M train | 0.0M val
+72.6s 36 63.1M train | 0.0M val
+76.2s 37 68.2M train | 0.0M val
+80.0s 38 73.7M train | 0.0M val
+83.7s 39 79.0M train | 0.0M val
+87.5s 40 84.2M train | 0.0M val
+91.0s 41 88.9M train | 0.0M val
+94.6s 42 93.9M train | 0.0M val
+98.2s 43 99.1M train | 0.0M val
+102.0s 44 104.4M train | 0.0M val
+105.6s 45 109.3M train | 0.0M val
+109.2s 46 114.4M train | 0.0M val
+112.9s 47 119.6M train | 0.0M val
+116.7s 48 125.2M train | 0.0M val
+120.3s 49 130.2M train | 0.0M val
+123.8s 50 135.0M train | 0.0M val
+127.3s 51 139.9M train | 0.0M val
+131.0s 52 145.0M train | 0.0M val
+134.8s 53 150.5M train | 0.0M val
+138.4s 54 155.7M train | 0.0M val
+142.0s 55 160.6M train | 0.0M val
+145.5s 56 165.6M train | 0.0M val
+149.3s 57 171.0M train | 0.0M val
+153.1s 58 176.3M train | 0.0M val
+157.0s 59 181.1M train | 0.0M val
+161.7s 60 186.0M train | 0.0M val
+166.2s 61 190.9M train | 0.0M val
+170.0s 62 196.2M train | 0.0M val
+173.7s 63 201.2M train | 0.0M val
+177.4s 64 206.1M train | 0.0M val
+181.1s 65 211.2M train | 0.0M val
+184.8s 66 216.3M train | 0.0M val
+188.7s 67 221.9M train | 0.0M val
+192.4s 68 227.1M train | 0.0M val
+196.0s 69 231.9M train | 0.0M val
+199.6s 70 236.9M train | 0.0M val
+203.4s 71 242.1M train | 0.0M val
+207.1s 72 247.3M train | 0.0M val
+210.7s 73 252.3M train | 0.0M val
+214.3s 74 257.1M train | 0.0M val
+218.0s 75 262.3M train | 0.0M val
+221.8s 76 267.4M train | 0.0M val
+225.5s 77 272.6M train | 0.0M val
+229.1s 78 277.7M train | 0.0M val
+232.7s 79 282.5M train | 0.0M val
+236.2s 80 287.5M train | 0.0M val
+240.2s 81 293.1M train | 0.0M val
+244.0s 82 298.4M train | 0.0M val
+247.5s 83 303.3M train | 0.0M val
+251.2s 84 308.0M train | 0.0M val
+254.8s 85 312.9M train | 0.0M val
+258.6s 86 318.3M train | 0.0M val
+262.3s 87 323.3M train | 0.0M val
+265.9s 88 328.4M train | 0.0M val
+269.6s 89 333.4M train | 0.0M val
+273.5s 90 338.8M train | 0.0M val
+280.0s 91 344.2M train | 0.0M val
+283.9s 92 349.5M train | 0.0M val
+288.0s 93 354.6M train | 0.0M val
+292.4s 94 359.8M train | 0.0M val
+297.1s 95 365.1M train | 0.0M val
+301.0s 96 370.8M train | 0.0M val
+304.8s 97 376.2M train | 0.0M val
+308.4s 98 381.1M train | 0.0M val
+312.1s 99 386.2M train | 0.0M val
+316.0s 100 391.8M train | 0.0M val
+319.7s 101 397.0M train | 0.0M val
+323.3s 102 400.0M train | 2.1M val
+327.0s 103 400.0M train | 7.1M val
+330.8s 104 400.0M train | 12.5M val
+334.7s 105 400.0M train | 18.0M val
+336.9s 106 saved.
+336.9s 107 train: 39,490 | val: 2,079 | prev_val: 20,003,063
+336.9s 108 tokens OK
+343.0s 109 Base checkpoint loaded successfully.
+343.1s 110 /tmp/ipykernel_24/3529882283.py:1: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+343.1s 111 scaler = torch.cuda.amp.GradScaler()
+343.1s 112 
+343.1s 113 /tmp/ipykernel_24/3529882283.py:1: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+343.1s 114 scaler = torch.cuda.amp.GradScaler()
+343.3s 115 Trainable: 294,912 / 51,377,664 (0.57%)
+357.5s 116 iter      0 | train 4.0482 | val 4.2120 | prev_dataset_val 3.7542 | lr 0.00e+00 | 0.00h
+357.9s 117 >> saved /kaggle/working/checkpoints/lora_ckpt_0000000.pt
+964.1s 118 iter    500 | train 3.5250 | val 3.8848 | prev_dataset_val 3.8466 | lr 7.50e-05 | 0.17h
+964.4s 119 >> saved /kaggle/working/checkpoints/lora_ckpt_0000500.pt
+1579.5s 120 iter   1000 | train 3.0140 | val 3.8601 | prev_dataset_val 4.0663 | lr 1.50e-04 | 0.34h
+1579.7s 121 >> saved /kaggle/working/checkpoints/lora_ckpt_0001000.pt
+2194.6s 122 iter   1500 | train 2.6810 | val 3.9351 | prev_dataset_val 4.1551 | lr 2.25e-04 | 0.51h
+2809.6s 123 iter   2000 | train 2.4530 | val 3.9632 | prev_dataset_val 4.3019 | lr 3.00e-04 | 0.68h
