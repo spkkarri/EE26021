@@ -1,0 +1,1729 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RUL Prediction Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===== DESIGN TOKENS ===== */
+      :root {
+        --bg: #090d14;
+        --surface: #0f1520;
+        --surface2: #161e2e;
+        --border: #1e2d45;
+        --border2: #253551;
+        --accent: #00d4ff;
+        --accent2: #0096cc;
+        --accent-glow: #00d4ff33;
+        --text: #e2ecf7;
+        --text-muted: #6a8aaa;
+        --text-dim: #3d5a7a;
+        --green: #00e5a0;
+        --green-bg: #00e5a015;
+        --yellow: #f5c400;
+        --yellow-bg: #f5c40015;
+        --red: #ff4d6a;
+        --red-bg: #ff4d6a15;
+        --radius: 12px;
+        --radius-lg: 18px;
+        --mono: "Space Mono", monospace;
+        --sans: "Syne", sans-serif;
+      }
+
+      /* ===== RESET ===== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--sans);
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ===== BACKGROUND MESH ===== */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background:
+          radial-gradient(
+            ellipse 80% 50% at 20% -10%,
+            #00d4ff0d 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 60% 40% at 85% 110%,
+            #0096cc0a 0%,
+            transparent 60%
+          );
+        pointer-events: none;
+      }
+
+      /* ===== GRID NOISE TEXTURE ===== */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300d4ff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        pointer-events: none;
+      }
+
+      /* ===== LAYOUT ===== */
+      .wrapper {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px 80px;
+      }
+
+      /* ===== NAVBAR ===== */
+      nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 0;
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--accent);
+        letter-spacing: 0.1em;
+      }
+      .nav-logo span.dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 8px var(--accent);
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(0.8);
+        }
+      }
+      .nav-links {
+        display: flex;
+        gap: 4px;
+      }
+      .nav-link {
+        font-family: var(--mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 6px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--accent);
+        background: var(--accent-glow);
+      }
+
+      /* ===== PAGE SECTIONS ===== */
+      .page-section {
+        display: none;
+      }
+      .page-section.active {
+        display: block;
+      }
+
+      /* ===== HERO HEADER ===== */
+      .hero {
+        padding: 60px 0 40px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .hero-left {
+        flex: 1;
+        min-width: 260px;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--accent-glow);
+        border: 1px solid var(--accent2);
+        border-radius: 100px;
+        padding: 4px 12px;
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--accent);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+      }
+      .hero h1 {
+        font-size: clamp(28px, 5vw, 52px);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        color: var(--text);
+      }
+      .hero h1 span {
+        color: var(--accent);
+      }
+      .hero-sub {
+        margin-top: 12px;
+        font-size: 15px;
+        color: var(--text-muted);
+        max-width: 420px;
+        line-height: 1.6;
+      }
+      .hero-stats {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+      }
+      .stat-chip {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 18px;
+      }
+      .stat-chip .val {
+        font-family: var(--mono);
+        font-size: 20px;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .stat-chip .lbl {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      /* ===== CARD ===== */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 28px;
+        position: relative;
+        overflow: hidden;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--accent2),
+          transparent
+        );
+        opacity: 0.4;
+      }
+      .card-title {
+        font-family: var(--mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--accent);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .card-title::before {
+        content: "//";
+        color: var(--text-dim);
+      }
+
+      /* ===== TOGGLE TABS ===== */
+      .mode-toggle {
+        display: flex;
+        gap: 0;
+        margin-bottom: 28px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 4px;
+        width: fit-content;
+      }
+      .mode-btn {
+        font-family: var(--mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 8px 20px;
+        border-radius: 7px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--text-muted);
+        background: transparent;
+      }
+      .mode-btn.active {
+        background: var(--accent);
+        color: #090d14;
+        font-weight: 700;
+      }
+
+      /* ===== FORM SECTIONS ===== */
+      .form-section {
+        margin-bottom: 28px;
+      }
+      .section-label {
+        font-family: var(--mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--text-dim);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .section-num {
+        background: var(--border2);
+        color: var(--accent);
+        border-radius: 4px;
+        font-size: 10px;
+        padding: 2px 6px;
+        font-family: var(--mono);
+      }
+
+      /* ===== FIELD GRID ===== */
+      .field-grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
+      }
+      .field-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 14px;
+      }
+      .field-grid-4 {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+      }
+
+      /* ===== FORM FIELDS ===== */
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .field label {
+        font-size: 11px;
+        color: var(--text-muted);
+        letter-spacing: 0.04em;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .field label .tip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--border2);
+        color: var(--text-dim);
+        font-size: 9px;
+        cursor: help;
+        position: relative;
+      }
+      .field label .tip:hover::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        color: var(--text);
+        font-size: 11px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+        z-index: 100;
+        pointer-events: none;
+        box-shadow: 0 4px 16px #00000060;
+      }
+      .field input {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--text);
+        transition: all 0.2s;
+        outline: none;
+        width: 100%;
+      }
+      .field input::placeholder {
+        color: var(--text-dim);
+      }
+      .field input:focus {
+        border-color: var(--accent2);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+      }
+      .field input.error {
+        border-color: var(--red);
+        box-shadow: 0 0 0 3px #ff4d6a20;
+      }
+
+      /* ===== JSON EDITOR ===== */
+      .json-editor-wrap {
+        position: relative;
+      }
+      .json-editor-wrap textarea {
+        width: 100%;
+        min-height: 380px;
+        background: #07101a;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        font-family: var(--mono);
+        font-size: 13px;
+        color: #8ec8f0;
+        line-height: 1.7;
+        resize: vertical;
+        outline: none;
+        transition: border 0.2s;
+      }
+      .json-editor-wrap textarea:focus {
+        border-color: var(--accent2);
+      }
+      .json-status {
+        position: absolute;
+        bottom: 14px;
+        right: 14px;
+        font-family: var(--mono);
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 5px;
+        pointer-events: none;
+      }
+      .json-status.ok {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+      .json-status.err {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+
+      /* ===== ACTION BUTTONS ===== */
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+      .btn-predict {
+        flex: 1;
+        min-width: 180px;
+        background: var(--accent);
+        color: #090d14;
+        border: none;
+        border-radius: 10px;
+        padding: 14px 28px;
+        font-family: var(--mono);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn-predict:hover {
+        background: #33deff;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px var(--accent-glow);
+      }
+      .btn-predict:active {
+        transform: translateY(0);
+      }
+      .btn-predict:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-reset {
+        background: var(--surface2);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 22px;
+        font-family: var(--mono);
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-reset:hover {
+        border-color: var(--border2);
+        color: var(--text);
+      }
+
+      /* ===== SPINNER ===== */
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid #09121e;
+        border-top-color: #09121e;
+        border-right-color: transparent;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading .spinner {
+        display: block;
+      }
+      .loading .btn-label {
+        display: none;
+      }
+
+      /* ===== RESULT CARD ===== */
+      #result-area {
+        margin-top: 24px;
+      }
+      .result-card {
+        border-radius: var(--radius-lg);
+        padding: 28px;
+        border: 1px solid;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        flex-wrap: wrap;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .result-card.green {
+        background: var(--green-bg);
+        border-color: var(--green);
+      }
+      .result-card.yellow {
+        background: var(--yellow-bg);
+        border-color: var(--yellow);
+      }
+      .result-card.red {
+        background: var(--red-bg);
+        border-color: var(--red);
+      }
+
+      .result-icon {
+        font-size: 40px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+      .result-body {
+        flex: 1;
+      }
+      .result-label {
+        font-family: var(--mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+      .result-card.green .result-label {
+        color: var(--green);
+      }
+      .result-card.yellow .result-label {
+        color: var(--yellow);
+      }
+      .result-card.red .result-label {
+        color: var(--red);
+      }
+      .result-value {
+        font-family: var(--mono);
+        font-size: clamp(28px, 5vw, 42px);
+        font-weight: 700;
+        color: var(--text);
+        margin: 4px 0;
+      }
+      .result-desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+      .result-badge {
+        padding: 8px 18px;
+        border-radius: 100px;
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .result-card.green .result-badge {
+        background: var(--green);
+        color: #061a12;
+      }
+      .result-card.yellow .result-badge {
+        background: var(--yellow);
+        color: #1a1500;
+      }
+      .result-card.red .result-badge {
+        background: var(--red);
+        color: #1a000a;
+      }
+
+      /* ===== RUL GAUGE ===== */
+      .gauge-wrap {
+        margin-top: 16px;
+      }
+      .gauge-track {
+        height: 6px;
+        background: var(--border);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .gauge-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gauge-ticks {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--text-dim);
+        margin-top: 4px;
+      }
+
+      /* ===== ABOUT / TEST DATA / TEAM SECTIONS ===== */
+      .section-hero {
+        padding: 60px 0 36px;
+      }
+      .section-hero h2 {
+        font-size: clamp(24px, 4vw, 40px);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .section-hero h2 span {
+        color: var(--accent);
+      }
+      .section-hero p {
+        color: var(--text-muted);
+        margin-top: 10px;
+        font-size: 15px;
+        max-width: 560px;
+        line-height: 1.65;
+      }
+
+      /* About grid */
+      .about-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 18px;
+        margin-top: 8px;
+      }
+      .about-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+      }
+      .about-icon {
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+      .about-item h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .about-item p {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      /* Pipeline steps */
+      .pipeline {
+        display: flex;
+        gap: 0;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        margin-top: 8px;
+      }
+      .pipe-step {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        flex-shrink: 0;
+      }
+      .pipe-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        text-align: center;
+        min-width: 110px;
+      }
+      .pipe-box .pipe-num {
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--accent);
+        margin-bottom: 4px;
+      }
+      .pipe-box .pipe-name {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .pipe-arrow {
+        color: var(--text-dim);
+        padding: 0 8px;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      /* Test data table */
+      .test-table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      th {
+        text-align: left;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border2);
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 10px;
+      }
+      td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-muted);
+      }
+      tr:hover td {
+        background: var(--surface2);
+        color: var(--text);
+      }
+      .use-btn {
+        background: var(--accent-glow);
+        border: 1px solid var(--accent2);
+        color: var(--accent);
+        border-radius: 6px;
+        padding: 4px 12px;
+        font-family: var(--mono);
+        font-size: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .use-btn:hover {
+        background: var(--accent);
+        color: #090d14;
+      }
+
+      /* Team */
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 18px;
+        margin-top: 8px;
+      }
+      .team-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 28px 24px;
+        text-align: center;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .team-card:hover {
+        border-color: var(--border2);
+        transform: translateY(-3px);
+      }
+      .team-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        margin: 0 auto 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        background: var(--surface2);
+        border: 2px solid var(--border2);
+        overflow: hidden;
+      }
+      .team-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .team-name {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .team-role {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--accent);
+        letter-spacing: 0.06em;
+      }
+      .team-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 8px;
+        line-height: 1.5;
+      }
+
+      /* ===== FOOTER ===== */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 24px 0;
+        margin-top: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      footer span {
+        color: var(--accent);
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 640px) {
+        .nav-links {
+          display: none;
+        }
+        .hero {
+          padding: 36px 0 28px;
+        }
+        .hero-stats {
+          gap: 12px;
+        }
+        .stat-chip {
+          padding: 10px 14px;
+        }
+        .card {
+          padding: 18px;
+        }
+        .field-grid-4 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- NAV -->
+      <nav>
+        <div class="nav-logo">
+          <span class="dot"></span>
+          RUL_ENGINE / v2.4
+        </div>
+        <div class="nav-links">
+          <a class="nav-link active" onclick="showSection('predict', this)"
+            >Predict</a
+          >
+          <a class="nav-link" onclick="showSection('testdata', this)"
+            >Test Data</a
+          >
+          <a class="nav-link" onclick="showSection('about', this)">About</a>
+          <a class="nav-link" onclick="showSection('team', this)">Team</a>
+        </div>
+      </nav>
+
+      <!-- ===================== PREDICT SECTION ===================== -->
+      <div id="sec-predict" class="page-section active">
+        <div class="hero">
+          <div class="hero-left">
+            <div class="hero-badge">⚡ Live Inference Engine</div>
+            <h1>RUL <span>Prediction</span><br />Dashboard</h1>
+            <p class="hero-sub">
+              Predict engine remaining useful life based on real-time sensor
+              telemetry and operational parameters.
+            </p>
+            <div class="hero-stats">
+              <div class="stat-chip">
+                <div class="val">21</div>
+                <div class="lbl">Sensors</div>
+              </div>
+              <div class="stat-chip">
+                <div class="val">3</div>
+                <div class="lbl">Op. Settings</div>
+              </div>
+              <div class="stat-chip">
+                <div class="val">LSTM</div>
+                <div class="lbl">Model Type</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Card -->
+        <div class="card" style="margin-bottom: 24px">
+          <div class="card-title">Input Configuration</div>
+
+          <!-- Mode Toggle -->
+          <div class="mode-toggle">
+            <button
+              class="mode-btn active"
+              id="btn-form"
+              onclick="switchMode('form')"
+            >
+              Form Input
+            </button>
+            <button class="mode-btn" id="btn-json" onclick="switchMode('json')">
+              JSON Input
+            </button>
+          </div>
+
+          <!-- FORM MODE -->
+          <div id="mode-form">
+            <form id="rul-form" onsubmit="return false;">
+              <!-- Section 1 -->
+              <div class="form-section">
+                <div class="section-label">
+                  <span class="section-num">01</span> Basic Info
+                </div>
+                <div class="field-grid-2">
+                  <div class="field">
+                    <label
+                      >Engine ID
+                      <span
+                        class="tip"
+                        data-tip="Unique identifier for the engine unit"
+                        >?</span
+                      ></label
+                    >
+                    <input
+                      type="number"
+                      id="unit"
+                      name="unit"
+                      placeholder="e.g. 1"
+                      min="1"
+                    />
+                  </div>
+                  <div class="field">
+                    <label
+                      >Cycle Time
+                      <span
+                        class="tip"
+                        data-tip="Current operational cycle count"
+                        >?</span
+                      ></label
+                    >
+                    <input
+                      type="number"
+                      id="cycle"
+                      name="cycle"
+                      placeholder="e.g. 12"
+                      min="1"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Section 2 -->
+              <div class="form-section">
+                <div class="section-label">
+                  <span class="section-num">02</span> Operational Settings
+                </div>
+                <div class="field-grid-3">
+                  <div class="field">
+                    <label
+                      >Setting 1
+                      <span
+                        class="tip"
+                        data-tip="Flight condition altitude factor"
+                        >?</span
+                      ></label
+                    >
+                    <input
+                      type="number"
+                      step="any"
+                      id="f1"
+                      name="f1"
+                      placeholder="e.g. 0.0026"
+                    />
+                  </div>
+                  <div class="field">
+                    <label
+                      >Setting 2
+                      <span class="tip" data-tip="Throttle resolver angle"
+                        >?</span
+                      ></label
+                    >
+                    <input
+                      type="number"
+                      step="any"
+                      id="f2"
+                      name="f2"
+                      placeholder="e.g. 0.0003"
+                    />
+                  </div>
+                  <div class="field">
+                    <label
+                      >Setting 3
+                      <span
+                        class="tip"
+                        data-tip="High pressure compressor inlet temp"
+                        >?</span
+                      ></label
+                    >
+                    <input
+                      type="number"
+                      step="any"
+                      id="f3"
+                      name="f3"
+                      placeholder="e.g. 100.0"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Section 3: Sensors -->
+              <div class="form-section">
+                <div class="section-label">
+                  <span class="section-num">03</span> Sensor Readings
+                </div>
+                <div class="field-grid-4" id="sensor-grid">
+                  <!-- sensors injected by JS -->
+                </div>
+              </div>
+
+              <div class="actions">
+                <button
+                  class="btn-predict"
+                  id="form-predict-btn"
+                  onclick="predictFromForm()"
+                >
+                  <div class="spinner"></div>
+                  <span class="btn-label">⚡ Predict RUL</span>
+                </button>
+                <button class="btn-reset" onclick="resetForm()">↺ Reset</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- JSON MODE -->
+          <div id="mode-json" style="display: none">
+            <div class="json-editor-wrap">
+              <textarea
+                id="json-input"
+                spellcheck="false"
+                oninput="validateJson(this)"
+              ></textarea>
+              <span class="json-status ok" id="json-status">✓ Valid JSON</span>
+            </div>
+            <div class="actions" style="margin-top: 16px">
+              <button
+                class="btn-predict"
+                id="json-predict-btn"
+                onclick="predictFromJson()"
+              >
+                <div class="spinner"></div>
+                <span class="btn-label">⚡ Predict RUL</span>
+              </button>
+              <button class="btn-reset" onclick="resetJson()">↺ Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Area -->
+        <div id="result-area"></div>
+      </div>
+
+      <!-- ===================== TEST DATA SECTION ===================== -->
+      <div id="sec-testdata" class="page-section">
+        <div class="section-hero">
+          <h2>Test <span>Datasets</span></h2>
+          <p>
+            Pre-loaded sample records from the CMAPSS benchmark dataset. Click
+            "Use" to auto-fill the prediction form.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-title">CMAPSS Sample Records</div>
+          <div class="test-table-wrap">
+            <table id="test-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Engine</th>
+                  <th>Cycle</th>
+                  <th>Setting 1</th>
+                  <th>Setting 2</th>
+                  <th>Setting 3</th>
+                  <th>Sensor 1</th>
+                  <th>Sensor 4</th>
+                  <th>Sensor 7</th>
+                  <th>Expected RUL</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== ABOUT SECTION ===================== -->
+      <div id="sec-about" class="page-section">
+        <div class="section-hero">
+          <h2>About the <span>Project</span></h2>
+          <p>
+            A predictive maintenance system built to forecast Remaining Useful
+            Life (RUL) of aircraft turbofan engines using deep learning on
+            sensor telemetry.
+          </p>
+        </div>
+
+        <div class="about-grid" style="margin-bottom: 28px">
+          <div class="about-item">
+            <div class="about-icon">🎯</div>
+            <h3>Objective</h3>
+            <p>
+              Estimate how many operational cycles remain before an engine
+              requires maintenance or replacement, enabling proactive scheduling
+              and preventing unplanned failures.
+            </p>
+          </div>
+          <div class="about-item">
+            <div class="about-icon">📊</div>
+            <h3>Dataset</h3>
+            <p>
+              Trained on the NASA CMAPSS (Commercial Modular Aero-Propulsion
+              System Simulation) dataset — a standard benchmark with four
+              fault-mode sub-datasets (FD001–FD004).
+            </p>
+          </div>
+          <div class="about-item">
+            <div class="about-icon">🧠</div>
+            <h3>Model Architecture</h3>
+            <p>
+              LSTM-based deep learning model processing multivariate time-series
+              sensor data. Incorporates sliding window preprocessing, MinMax
+              normalization, and dropout regularization.
+            </p>
+          </div>
+          <div class="about-item">
+            <div class="about-icon">🔌</div>
+            <h3>API Backend</h3>
+            <p>
+              Flask REST API accepting JSON or form input, running inference in
+              real-time. Returns predicted RUL cycles with health classification
+              (healthy / warning / critical).
+            </p>
+          </div>
+          <div class="about-item">
+            <div class="about-icon">📈</div>
+            <h3>Performance</h3>
+            <p>
+              Achieves RMSE ~13.4 on FD001 test set. Model evaluated against
+              CMAPSS leaderboard benchmarks using NASA scoring function to
+              penalize early predictions more heavily.
+            </p>
+          </div>
+          <div class="about-item">
+            <div class="about-icon">⚙️</div>
+            <h3>Tech Stack</h3>
+            <p>
+              Python · TensorFlow/Keras · Flask · NumPy · scikit-learn. Frontend
+              built with pure HTML5, CSS3, and vanilla JavaScript for
+              zero-dependency embedding.
+            </p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px">
+          <div class="card-title">ML Pipeline</div>
+          <div class="pipeline">
+            <div class="pipe-step">
+              <div class="pipe-box">
+                <div class="pipe-num">01</div>
+                <div class="pipe-name">Sensor Input</div>
+              </div>
+              <div class="pipe-arrow">→</div>
+            </div>
+            <div class="pipe-step">
+              <div class="pipe-box">
+                <div class="pipe-num">02</div>
+                <div class="pipe-name">Normalize</div>
+              </div>
+              <div class="pipe-arrow">→</div>
+            </div>
+            <div class="pipe-step">
+              <div class="pipe-box">
+                <div class="pipe-num">03</div>
+                <div class="pipe-name">Sliding Window</div>
+              </div>
+              <div class="pipe-arrow">→</div>
+            </div>
+            <div class="pipe-step">
+              <div class="pipe-box">
+                <div class="pipe-num">04</div>
+                <div class="pipe-name">LSTM Model</div>
+              </div>
+              <div class="pipe-arrow">→</div>
+            </div>
+            <div class="pipe-step">
+              <div class="pipe-box">
+                <div class="pipe-num">05</div>
+                <div class="pipe-name">RUL Cycles</div>
+              </div>
+              <div class="pipe-arrow">→</div>
+            </div>
+            <div class="pipe-step">
+              <div class="pipe-box">
+                <div class="pipe-num">06</div>
+                <div class="pipe-name">Health Class</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== TEAM SECTION ===================== -->
+      <div id="sec-team" class="page-section">
+        <div class="section-hero">
+          <h2>Meet the <span>Team</span></h2>
+          <p>
+            The researchers and engineers behind this predictive maintenance
+            system.
+          </p>
+        </div>
+        <div class="team-grid" id="team-grid">
+          <!-- injected by JS -->
+        </div>
+      </div>
+
+      <footer>
+        <div>
+          RUL_ENGINE · Predictive Maintenance System · <span>NASA CMAPSS</span>
+        </div>
+        <div>Built with Flask + TensorFlow · <span>© 2026</span></div>
+      </footer>
+    </div>
+
+    <!-- ===================== SCRIPTS ===================== -->
+    <script>
+      // ── Data ──────────────────────────────────────────────────────
+      const SAMPLE_JSON = {
+        features: {
+          unit: 1,
+          cycle: 12,
+          f1: 0.0026,
+          f2: 0.0003,
+          f3: 100.0,
+          f4: 518.67,
+          f5: 642.54,
+          f6: 1587.43,
+          f7: 1397.82,
+          f8: 14.62,
+          f9: 21.61,
+          f10: 554.35,
+          f11: 2388.02,
+          f12: 9050.02,
+          f13: 1.3,
+          f14: 47.27,
+          f15: 522.01,
+          f16: 2388.06,
+          f17: 8132.33,
+          f18: 8.3984,
+          f19: 0.03,
+          f20: 391,
+          f21: 2388,
+          f22: 100.0,
+          f23: 39.11,
+          f24: 23.3845,
+        },
+      };
+
+      const SENSOR_META = [
+        {
+          id: "f4",
+          label: "Sensor 1",
+          tip: "Total temperature at fan inlet (°R)",
+        },
+        {
+          id: "f5",
+          label: "Sensor 2",
+          tip: "Total temperature at LPC outlet (°R)",
+        },
+        {
+          id: "f6",
+          label: "Sensor 3",
+          tip: "Total temperature at HPC outlet (°R)",
+        },
+        {
+          id: "f7",
+          label: "Sensor 4",
+          tip: "Total temperature at LPT outlet (°R)",
+        },
+        { id: "f8", label: "Sensor 5", tip: "Pressure at fan inlet (psia)" },
+        {
+          id: "f9",
+          label: "Sensor 6",
+          tip: "Total pressure in bypass-duct (psia)",
+        },
+        {
+          id: "f10",
+          label: "Sensor 7",
+          tip: "Total pressure at HPC outlet (psia)",
+        },
+        { id: "f11", label: "Sensor 8", tip: "Physical fan speed (rpm)" },
+        { id: "f12", label: "Sensor 9", tip: "Physical core speed (rpm)" },
+        { id: "f13", label: "Sensor 10", tip: "Engine pressure ratio (–)" },
+        {
+          id: "f14",
+          label: "Sensor 11",
+          tip: "Static pressure at HPC outlet (psia)",
+        },
+        {
+          id: "f15",
+          label: "Sensor 12",
+          tip: "Ratio of fuel flow to Ps30 (pps/psi)",
+        },
+        { id: "f16", label: "Sensor 13", tip: "Corrected fan speed (rpm)" },
+        { id: "f17", label: "Sensor 14", tip: "Corrected core speed (rpm)" },
+        { id: "f18", label: "Sensor 15", tip: "Bypass ratio (–)" },
+        { id: "f19", label: "Sensor 16", tip: "Burner fuel-air ratio" },
+        { id: "f20", label: "Sensor 17", tip: "Bleed enthalpy (BTU/lb)" },
+        { id: "f21", label: "Sensor 18", tip: "Required fan speed (rpm)" },
+        {
+          id: "f22",
+          label: "Sensor 19",
+          tip: "Required fan conversion speed (rpm)",
+        },
+        { id: "f23", label: "Sensor 20", tip: "HPT coolant bleed (lbm/s)" },
+        { id: "f24", label: "Sensor 21", tip: "LPT coolant bleed (lbm/s)" },
+      ];
+
+      let TEST_DATA = [];
+
+      const TEAM = [
+        {
+          name: "Nachikethus V K",
+          role: "Team Lead",
+          roll: "524153",
+          photo: "nachikethus.jpeg",
+        },
+        {
+          name: "Milan K Varghese",
+          role: "Team Member",
+          roll: "524150",
+          photo: "milan.jpeg",
+        },
+        {
+          name: "Leo Mathew",
+          role: "Team Member",
+          roll: "524145",
+          photo: "leo mathew.jpeg",
+        },
+      ];
+
+      // ── Build Sensor Grid ─────────────────────────────────────────
+      const grid = document.getElementById("sensor-grid");
+      SENSOR_META.forEach((s) => {
+        grid.innerHTML += `
+      <div class="field">
+        <label>${s.label} <span class="tip" data-tip="${s.tip}">?</span></label>
+        <input type="number" step="any" id="${s.id}" name="${s.id}" placeholder="${SAMPLE_JSON.features[s.id] ?? ""}">
+      </div>`;
+      });
+
+      // ── Build Test Table ──────────────────────────────────────────
+      const tbody = document.querySelector("#test-table tbody");
+
+      function renderTestTable() {
+        tbody.innerHTML = "";
+        TEST_DATA.forEach((r) => {
+          const rulLabel =
+            r.rul > 100
+              ? `<span style="color:var(--green)">${r.rul}</span>`
+              : r.rul > 30
+                ? `<span style="color:var(--yellow)">${r.rul}</span>`
+                : `<span style="color:var(--red)">${r.rul}</span>`;
+          tbody.innerHTML += `
+      <tr>
+        <td>${r.id}</td><td>${r.unit}</td><td>${r.cycle}</td>
+        <td>${r.f1}</td><td>${r.f2}</td><td>${r.f3}</td>
+        <td>${r.f4}</td><td>${r.f7}</td><td>${r.f10}</td>
+        <td>${rulLabel}</td>
+        <td><button class="use-btn" onclick="loadTestRecord(${r.id})">Use ↗</button></td>
+      </tr>`;
+        });
+      }
+
+      async function loadTestData() {
+        try {
+          const resp = await fetch("/testdata");
+          const data = await resp.json();
+          if (!resp.ok) {
+            throw new Error(data.error || "Failed to load test data");
+          }
+          TEST_DATA = Array.isArray(data.rows) ? data.rows : [];
+          renderTestTable();
+        } catch (e) {
+          console.error("Unable to load test data:", e);
+        }
+      }
+
+      // ── Build Team Grid ───────────────────────────────────────────
+      const teamGrid = document.getElementById("team-grid");
+      TEAM.forEach((m) => {
+        teamGrid.innerHTML += `
+      <div class="team-card">
+        <div class="team-avatar"><img src="/profiles/${encodeURIComponent(m.photo)}" alt="${m.name}"></div>
+        <div class="team-name">${m.name}</div>
+        <div class="team-role">${m.role}</div>
+        <div class="team-desc">Roll No: ${m.roll}</div>
+      </div>`;
+      });
+
+      // ── Init JSON textarea ────────────────────────────────────────
+      document.getElementById("json-input").value = JSON.stringify(
+        SAMPLE_JSON,
+        null,
+        2,
+      );
+      loadTestData();
+
+      // ── Section Navigation ────────────────────────────────────────
+      function showSection(name, el) {
+        document
+          .querySelectorAll(".page-section")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById("sec-" + name).classList.add("active");
+        document
+          .querySelectorAll(".nav-link")
+          .forEach((l) => l.classList.remove("active"));
+        if (el) el.classList.add("active");
+      }
+
+      // ── Mode Toggle ───────────────────────────────────────────────
+      function switchMode(mode) {
+        const isForm = mode === "form";
+        document.getElementById("mode-form").style.display = isForm
+          ? ""
+          : "none";
+        document.getElementById("mode-json").style.display = isForm
+          ? "none"
+          : "";
+        document.getElementById("btn-form").classList.toggle("active", isForm);
+        document.getElementById("btn-json").classList.toggle("active", !isForm);
+      }
+
+      // ── JSON Validation ───────────────────────────────────────────
+      function validateJson(el) {
+        const st = document.getElementById("json-status");
+        try {
+          JSON.parse(el.value);
+          st.textContent = "✓ Valid JSON";
+          st.className = "json-status ok";
+          return true;
+        } catch (e) {
+          st.textContent = "✕ Invalid JSON";
+          st.className = "json-status err";
+          return false;
+        }
+      }
+
+      // ── Extract features from any payload shape ───────────────────
+      function extractFeatures(obj) {
+        return obj.features ? obj.features : obj;
+      }
+
+      // ── Collect form values ───────────────────────────────────────
+      function collectForm() {
+        const fields = [
+          "unit",
+          "cycle",
+          "f1",
+          "f2",
+          "f3",
+          ...SENSOR_META.map((s) => s.id),
+        ];
+        const data = {};
+        const errors = [];
+        fields.forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const v = el.value.trim();
+          if (v === "") {
+            el.classList.add("error");
+            errors.push(id);
+          } else {
+            el.classList.remove("error");
+            data[id] = parseFloat(v);
+          }
+        });
+        return errors.length ? null : data;
+      }
+
+      // ── Real inference via Flask API ──────────────────────────────
+      async function requestPrediction(payload) {
+        const resp = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        let result;
+        try {
+          result = await resp.json();
+        } catch (e) {
+          throw new Error("Invalid response from server.");
+        }
+
+        if (!resp.ok) {
+          throw new Error(result.error || "Prediction request failed.");
+        }
+
+        if (typeof result === "number") {
+          return { rul: result };
+        }
+
+        if (typeof result?.rul === "number") {
+          return { rul: result.rul, valuation: result.valuation || null };
+        }
+
+        throw new Error("Prediction response is missing a numeric RUL value.");
+      }
+
+      // ── Set button loading state ──────────────────────────────────
+      function setLoading(btnId, on) {
+        const btn = document.getElementById(btnId);
+        if (on) {
+          btn.disabled = true;
+          btn.classList.add("loading");
+        } else {
+          btn.disabled = false;
+          btn.classList.remove("loading");
+        }
+      }
+
+      // ── Render result ─────────────────────────────────────────────
+      function renderResult(rul, valuation = null) {
+        const area = document.getElementById("result-area");
+        const cls = rul > 100 ? "green" : rul > 30 ? "yellow" : "red";
+        const icon = rul > 100 ? "✅" : rul > 30 ? "⚠️" : "🔴";
+        const label =
+          rul > 100
+            ? "Healthy Engine"
+            : rul > 30
+              ? "Monitor Closely"
+              : "Failure Risk";
+        const badge = rul > 100 ? "HEALTHY" : rul > 30 ? "WARNING" : "CRITICAL";
+        const desc =
+          rul > 100
+            ? "Engine is operating within normal parameters. Routine maintenance schedule can proceed."
+            : rul > 30
+              ? "Moderate degradation detected. Increase inspection frequency and prepare maintenance."
+              : "Critical wear detected. Immediate maintenance required to prevent unplanned failure.";
+        const pct = Math.min(100, Math.round((rul / 250) * 100));
+        const fillColor =
+          rul > 100
+            ? "var(--green)"
+            : rul > 30
+              ? "var(--yellow)"
+              : "var(--red)";
+
+        const valuationHtml = valuation
+          ? `
+      <div class="result-desc" style="margin-top:10px">
+        True RUL: ${Number(valuation.true_rul).toFixed(2)} cycles<br>
+        Absolute Error: ${Number(valuation.absolute_error).toFixed(2)} cycles<br>
+        Error %: ${Number(valuation.percentage_error).toFixed(2)}%
+      </div>`
+          : "";
+
+        area.innerHTML = `
+      <div class="result-card ${cls}">
+        <div class="result-icon">${icon}</div>
+        <div class="result-body">
+          <div class="result-label">${label}</div>
+          <div class="result-value">${rul} cycles</div>
+          <div class="result-desc">${desc}</div>
+          ${valuationHtml}
+          <div class="gauge-wrap">
+            <div class="gauge-track">
+              <div class="gauge-fill" id="gauge-fill" style="width:0%;background:${fillColor}"></div>
+            </div>
+            <div class="gauge-ticks"><span>0</span><span>Critical (&lt;30)</span><span>Warning (&lt;100)</span><span>Healthy</span></div>
+          </div>
+        </div>
+        <div class="result-badge">${badge}</div>
+      </div>`;
+        // Animate gauge
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            document.getElementById("gauge-fill").style.width = pct + "%";
+          });
+        });
+      }
+
+      // ── Predict from form ─────────────────────────────────────────
+      async function predictFromForm() {
+        const data = collectForm();
+        if (!data) {
+          alert("Please fill in all fields before predicting.");
+          return;
+        }
+        setLoading("form-predict-btn", true);
+        try {
+          const result = await requestPrediction({ features: data });
+          renderResult(result.rul, result.valuation);
+          document
+            .getElementById("result-area")
+            .scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } catch (e) {
+          alert("Prediction failed: " + e.message);
+        } finally {
+          setLoading("form-predict-btn", false);
+        }
+      }
+
+      // ── Predict from JSON ─────────────────────────────────────────
+      async function predictFromJson() {
+        const ta = document.getElementById("json-input");
+        if (!validateJson(ta)) {
+          alert("Please fix JSON errors before predicting.");
+          return;
+        }
+        const payload = JSON.parse(ta.value);
+        setLoading("json-predict-btn", true);
+        try {
+          const normalizedPayload = payload.features
+            ? payload
+            : { features: payload };
+          const result = await requestPrediction(normalizedPayload);
+          renderResult(result.rul, result.valuation);
+          document
+            .getElementById("result-area")
+            .scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } catch (e) {
+          alert("Prediction failed: " + e.message);
+        } finally {
+          setLoading("json-predict-btn", false);
+        }
+      }
+
+      // ── Reset ─────────────────────────────────────────────────────
+      function resetForm() {
+        document.getElementById("rul-form").reset();
+        document
+          .querySelectorAll(".field input")
+          .forEach((el) => el.classList.remove("error"));
+        document.getElementById("result-area").innerHTML = "";
+      }
+      function resetJson() {
+        document.getElementById("json-input").value = JSON.stringify(
+          SAMPLE_JSON,
+          null,
+          2,
+        );
+        validateJson(document.getElementById("json-input"));
+        document.getElementById("result-area").innerHTML = "";
+      }
+
+      // ── Load test record into form ────────────────────────────────
+      function loadTestRecord(id) {
+        const r = TEST_DATA.find((t) => t.id === id);
+        if (!r) return;
+        const selected = {};
+        Object.entries(r).forEach(([k, v]) => {
+          if (k === "id" || k === "rul") return;
+          selected[k] = v;
+          const el = document.getElementById(k);
+          if (el) el.value = v;
+        });
+
+        // Keep JSON mode in sync with selected test row data.
+        const jsonEditor = document.getElementById("json-input");
+        if (jsonEditor) {
+          jsonEditor.value = JSON.stringify({ features: selected }, null, 2);
+          validateJson(jsonEditor);
+        }
+
+        // Navigate to predict tab
+        showSection("predict", document.querySelectorAll(".nav-link")[0]);
+        switchMode("form");
+        setTimeout(
+          () =>
+            document
+              .querySelector(".card")
+              .scrollIntoView({ behavior: "smooth" }),
+          100,
+        );
+      }
+    </script>
+  </body>
+</html>
