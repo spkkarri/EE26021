@@ -1,13 +1,11 @@
 # Pothole Detection
-This project implements pothole detection using computer vision techniques. 
-It processes road images to identify potholes, draws bounding boxes around them, 
-and estimates their dimensions using image processing methods such as grayscale conversion, 
-Gaussian blur, thresholding, and contour detection.
+This project implements pothole detection using computer vision techniques. It processes road images to identify potholes, draws bounding boxes around them, and estimates their dimensions using image processing methods such as grayscale conversion, Gaussian blur, thresholding, and contour detection.
+
 
 ## Team Members
-Srihitha Tirnati - 524183
-
 Kshirja Challa - 524143
+
+Srihitha Tirnati - 524183
 
 P Bhavya - 524163
 
@@ -19,34 +17,19 @@ Watch our project explanation:
 
 
 ### 1. Install Requirements
-Run the following in Google Colab:
+Open terminal in VS Code and run:
 
 pip install ultralytics opencv-python matplotlib numpy
 
 ### 2. Upload Dataset
 
-Upload your dataset zip file using:
-
-from google.colab import files
-files.upload()
-
-Then extract:
-
-import zipfile
-
-with zipfile.ZipFile("dataset.zip", 'r') as zip_ref:
-
-    zip_ref.extractall("/content/dataset")
 
 ### 3. Run the Project
 
-Execute the main code in Colab:
+Run the projectt using vs code
 
-- Load image
-- Apply preprocessing (grayscale, blur)
-- Apply thresholding
-- Detect contours
-- Draw bounding boxes
+Run the script:
+python train.py
 
 The output will show detected potholes with dimensions.
 
@@ -58,20 +41,15 @@ The output will show detected potholes with dimensions.
 - Output visualized using matplotlib
 
 ## Project Structure
-
-Code/
-
-  pothole_detection.ipynb
-  README.md
-  
-
-assets/
-  PPT.pptx
-  Report.pdf
-  
-
-data/
-  dataset.zip
+05/
+ ├── code/
+ │     └── train.py
+ ├── asset/
+ │     ├── PPT.pptx
+ │     └── Report.pdf
+ ├── data/
+ │     └── dataset_link.txt
+ └── readme.md
   
 
 ## Model Performance
@@ -82,7 +60,10 @@ data/
 ## System Requirements
 
 - Python 3.x
-- Google Colab
+- Vs code
 - OpenCV
 - NumPy
 - Matplotlib
+
+Dataset:
+Download dataset from the link provided in the data folder and extract it.
