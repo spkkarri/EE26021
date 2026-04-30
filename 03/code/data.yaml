@@ -1,4 +1,4 @@
-path: /content/drive/MyDrive/YOLO_Project/yolo_dataset
+path: ./yolo_dataset
 train: train/images
 val: val/images
 
