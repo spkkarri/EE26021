@@ -13,6 +13,7 @@ results = model.train(
     imgsz=640,
     workers=6,
     batch=16,
+    
     project=os.path.join(BASE_DIR, '..', 'runs'),
-    name='insulator_model'
+    name='glass_porcelain_detect' 
 )
