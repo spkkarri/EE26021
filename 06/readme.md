@@ -1,115 +1,182 @@
-Microgrid Energy Forecasting and Optimization Project
+# Microgrid Energy Forecasting and Optimization Project
+
 This project implements a hybrid deep learning and reinforcement learning framework for microgrid energy management. It combines a CNN-LSTM model for forecasting renewable generation and load demand, along with a PPO-based reinforcement learning agent for optimized energy distribution.
 
-Project Explanation
-Watch our project explanation: https://youtu.be/fjA-_VL7jrc
+---
 
-Team Members
-T.Teena Anjusha - 524182
-N.Sai Ambika Akshaya-524154 •P.Manasa Varshini - 524160
-Project Explanation
+## 📌 Project Explanation  
+Watch our project explanation:  
+https://youtu.be/fjA-_VL7jrc  
+
+---
+
+## 👥 Team Members  
+- T. Teena Anjusha – 524182  
+- N. Sai Ambika Akshaya – 524154  
+- P. Manasa Varshini – 524160  
+
+---
+
+## ⚙️ Project Overview  
+
 This project consists of two major components:
 
-Forecasting Module (CNN + LSTM)
-
+### 1. Forecasting Module (CNN + LSTM)  
 Predicts:
+- PV (Solar) Production  
+- Wind Production  
+- Electric Demand  
 
-PV (Solar) Production
-Wind Production
-Electric Demand
-Uses time-series data with feature engineering (lag features, rolling mean, temporal features)
+Uses time-series data with feature engineering:
+- Lag features  
+- Rolling mean  
+- Temporal features  
 
-Optimization Module (Reinforcement Learning - PPO)
+---
 
+### 2. Optimization Module (Reinforcement Learning - PPO)  
 Learns optimal energy distribution between:
+- Solar  
+- Wind  
+- Grid  
 
-Solar
-Wind
-Grid
-Maximizes renewable usage while ensuring demand satisfaction
+Goal:
+- Maximize renewable usage  
+- Ensure demand satisfaction  
 
-Setup Instructions
-1. Dataset Preparation
-Ensure you have the following CSV files:
+---
 
-microgrid_data.csv → Used for forecasting model
-Database.csv → Used for reinforcement learning environment
-Place them in the project root directory.
+## 📂 Dataset Description  
 
-2. Install Requirements
-Install dependencies using pip:
+This project uses a **single dataset file**:
 
+- **Database.csv** → Used for both:
+  - Forecasting model training (CNN + LSTM)
+  - Reinforcement Learning environment (PPO)
+
+### Dataset Contains:
+- Solar Irradiance (DHI, DNI, GHI)  
+- Weather data (Temperature, Humidity, Wind Speed)  
+- Load demand values  
+- Time-related features  
+
+📥 **Dataset Download Link:**  
+https://data.mendeley.com/datasets/fdfftr3tc2/1  
+
+*(This dataset is hosted on Mendeley Data, a research data repository that allows datasets to be shared, cited, and reused in scientific projects.)* :contentReference[oaicite:0]{index=0}  
+
+---
+
+## 🛠️ Setup Instructions  
+
+### 1. Dataset Preparation  
+Ensure the following file is present in the root directory:
+
+- `Database.csv`
+
+---
+
+### 2. Install Requirements  
+
+```bash
 pip install numpy pandas matplotlib scikit-learn tensorflow gym stable-baselines3
-(Optional) Install GPU support:
+```
 
+(Optional for GPU support):
+```bash
 pip install tensorflow-gpu
-3. Run the Project
-Execute the script:
+```
 
+---
+
+### 3. Run the Project  
+
+```bash
 python main.py
+```
+
 The script will:
+- Load and preprocess data from `Database.csv`
+- Train CNN-LSTM forecasting model  
+- Evaluate predictions using MAE, RMSE, R²  
+- Train PPO reinforcement learning agent  
+- Optimize energy distribution  
+- Display graphs and performance metrics  
 
-Load and preprocess data
-Train CNN-LSTM forecasting model
-Evaluate predictions using MAE, RMSE, R²
-Train PPO reinforcement learning agent
-Optimize energy distribution
-Display graphs and performance metrics
-4. Results and Outputs
+---
+
+## 📊 Results and Outputs  
+
 The project generates:
+- Training vs Validation Loss Curve  
+- Load Forecasting Graph  
+- Scatter Plot (Actual vs Predicted Load)  
+- Energy Distribution Graph (Solar, Wind, Grid)  
+- Reward Curve (RL Performance)  
 
-Training vs Validation Loss Curve
-Load Forecasting Graph
-Scatter Plot (Actual vs Predicted Load)
-Energy Distribution Graph (Solar, Wind, Grid)
-Reward Curve (RL Performance)
-Model file saved as:
+Saved model:
+- `final_microgrid_model.h5`
 
-final_microgrid_model.h5
-Project Structure
+---
+
+## 📁 Project Structure  
+
+```
 ├── main.py                     # Full implementation (Forecasting + RL)
-├── microgrid_data.csv         # Forecasting dataset
-├── Database.csv               # RL dataset
+├── Database.csv               # Dataset for both forecasting and RL
 ├── final_microgrid_model.h5   # Saved trained model
-├── assets/                    # Output graphs (optional if saved)
-Model Details
-Forecasting Model (CNN + LSTM)
-Input Features:
+├── assets/                    # Output graphs (optional)
+```
 
-Solar Irradiance (DHI, DNI, GHI)
-Weather (Temperature, Humidity, Wind Speed)
-Time Features (Hour, Day, Month)
-Encoded categorical variables
-Lag features & rolling mean
-Architecture:
+---
 
-Conv1D (feature extraction)
-Batch Normalization
-LSTM (temporal learning)
-Dense layers
-Dropout (regularization)
-Loss Function: Mean Squared Error (MSE)
+## 🤖 Model Details  
 
-Reinforcement Learning Model (PPO)
-State Space:
+### Forecasting Model (CNN + LSTM)  
 
-Solar production
-Wind production
-Load demand
-Action Space:
+**Input Features:**
+- Solar Irradiance (DHI, DNI, GHI)  
+- Weather (Temperature, Humidity, Wind Speed)  
+- Time Features (Hour, Day, Month)  
+- Encoded categorical variables  
+- Lag features & rolling mean  
 
-Allocation weights for:
+**Architecture:**
+- Conv1D (feature extraction)  
+- Batch Normalization  
+- LSTM (temporal learning)  
+- Dense layers  
+- Dropout (regularization)  
 
-Solar
-Wind
-Grid
-Reward Function Includes:
+**Loss Function:**
+- Mean Squared Error (MSE)  
 
-Demand-supply balance
-Renewable energy usage
-Grid usage penalty
-Incentives for efficient renewable utilization
-Sample Output (Console)
+---
+
+### Reinforcement Learning Model (PPO)  
+
+**State Space:**
+- Solar production  
+- Wind production  
+- Load demand  
+
+**Action Space:**
+- Allocation weights for:
+  - Solar  
+  - Wind  
+  - Grid  
+
+**Reward Function Includes:**
+- Demand-supply balance  
+- Renewable energy usage  
+- Grid usage penalty  
+- Incentives for efficient renewable utilization  
+
+---
+
+## 🖥️ Sample Output (Console)  
+
+```
 Step 1
 Demand: 0.532
 Solar Used: 0.210
@@ -118,25 +185,46 @@ Grid Used : 0.142
 Renewable %: 73.30%
 Reward: 14.23
 ----------------------------------------
-Evaluation Metrics
-MAE (Mean Absolute Error)
-RMSE (Root Mean Squared Error)
-R² Score (Model Accuracy)
-System Requirements
-Python 3.8+
-8GB RAM minimum
-GPU (optional but recommended)
-2GB Disk Space
-Key Highlights
-Hybrid AI approach (Deep Learning + Reinforcement Learning)
-Realistic microgrid simulation without battery
-Multi-output forecasting
-Reward-engineered energy optimization
-Scalable for smart grid applications
-Future Improvements
-Add battery storage optimization
-Include real-time deployment
-Integrate pricing and cost optimization
-Use advanced RL models (SAC, TD3)
-Conclusion
-This project demonstrates how AI can be effectively used to forecast energy demand and optimize renewable energy utilization in microgrids, contributing to smarter and more sustainable power systems.
+```
+
+---
+
+## 📈 Evaluation Metrics  
+
+- MAE (Mean Absolute Error)  
+- RMSE (Root Mean Squared Error)  
+- R² Score (Model Accuracy)  
+
+---
+
+## 💻 System Requirements  
+
+- Python 3.8+  
+- 8GB RAM minimum  
+- GPU (optional but recommended)  
+- 2GB Disk Space  
+
+---
+
+## 🚀 Key Highlights  
+
+- Hybrid AI approach (Deep Learning + Reinforcement Learning)  
+- Single dataset pipeline for simplicity  
+- Multi-output forecasting  
+- Reward-engineered energy optimization  
+- Scalable for smart grid applications  
+
+---
+
+## 🔮 Future Improvements  
+
+- Add battery storage optimization  
+- Include real-time deployment  
+- Integrate pricing and cost optimization  
+- Use advanced RL models (SAC, TD3)  
+
+---
+
+## ✅ Conclusion  
+
+This project demonstrates how AI can be effectively used to forecast energy demand and optimize renewable energy utilization in microgrids, contributing to smarter and more sustainable power systems using a **unified dataset approach**.
