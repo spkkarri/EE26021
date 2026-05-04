@@ -5,7 +5,7 @@ pip install gdown
 $folderUrl = "https://drive.google.com/drive/folders/1MbgZrASiTTbc7bM3Yi368yPJ6obH7a6o?usp=sharing"
 
 # Set destination directory
-$destinationDir = ".\11-114\data"
+$destinationDir = "./data/nasa/"
 
 # Create directory if it doesn't exist
 if (-not (Test-Path -Path $destinationDir)) {

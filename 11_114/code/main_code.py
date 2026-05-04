@@ -55,7 +55,7 @@ def load_raw_data(folder_path):
     return features_list, targets_list
 
 # Load the raw, unscaled data
-CSV_FOLDER = "C:/Users/Sanyasinaidu ch/OneDrive/Desktop/dataset/csv_output"
+CSV_FOLDER = './data/nasa/'
 print("Loading NASA Battery Data...")
 features_list, targets_list = load_raw_data(CSV_FOLDER)
 
