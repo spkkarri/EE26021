@@ -1,12 +1,15 @@
+import os
 from ultralytics import YOLO
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-model_path = '/content/drive/MyDrive/YOLO_Project/runs/glass_porcelain_detect/weights/best.pt'
+model_path = os.path.join(BASE_DIR, '..', 'runs', 'glass_porcelain_detect', 'weights', 'best.pt')
 model = YOLO(model_path)
 
+data_config = os.path.join(BASE_DIR, 'data.yaml')
 
 model.train(
-    data='/content/drive/MyDrive/YOLO_Project/data.yaml',
+    data=data_config,
     epochs=50,                  
     imgsz=1024,                 
     batch=16,                   
@@ -26,6 +29,6 @@ model.train(
     optimizer='AdamW',
     
     
-    project='/content/drive/MyDrive/YOLO_Project/runs', 
+    project=os.path.join(BASE_DIR, '..', 'runs'), 
     name='insulator_finetune_50epochs' 
 )
