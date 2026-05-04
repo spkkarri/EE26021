@@ -1,0 +1,49 @@
+stages:
+  data_ingestion:
+    cmd: python src/RUL_prediction/pipeline/stage_01_data_ingestion.py
+    deps:
+      - src/RUL_prediction/pipeline/stage_01_data_ingestion.py
+      - src/RUL_prediction/components/data_ingestion.py
+      - config/config.yaml
+      - Data/train_FD001.txt
+      - Data/test_FD001.txt
+    outs:
+      - artifacts/data_ingestion/train_processed.csv
+      - artifacts/data_ingestion/test_processed.csv
+
+  prepare_base_model:
+    cmd: python src/RUL_prediction/pipeline/stage_02_prepare_base_model.py
+    deps:
+      - src/RUL_prediction/pipeline/stage_02_prepare_base_model.py
+      - src/RUL_prediction/components/prepare_base_model.py
+      - config/config.yaml
+    outs:
+      - artifacts/prepare_base_model
+
+  training:
+    cmd: python src/RUL_prediction/pipeline/stage_03_training.py
+    deps:
+      - src/RUL_prediction/pipeline/stage_03_training.py
+      - src/RUL_prediction/components/training.py
+      - config/config.yaml
+      - artifacts/data_ingestion/train_processed.csv
+      - artifacts/prepare_base_model
+    outs:
+      - artifacts/training/model.h5
+      - artifacts/training/scaler.pkl
+      - artifacts/training/feature_columns.json
+
+  evaluation:
+    cmd: python src/RUL_prediction/pipeline/stage_04_evaluation.py
+    deps:
+      - src/RUL_prediction/pipeline/stage_04_evaluation.py
+      - src/RUL_prediction/components/evaluation.py
+      - config/config.yaml
+      - artifacts/data_ingestion/test_processed.csv
+      - Data/RUL_FD001.txt
+      - artifacts/training/model.h5
+      - artifacts/training/scaler.pkl
+      - artifacts/training/feature_columns.json
+    metrics:
+      - scores.json:
+          cache: false

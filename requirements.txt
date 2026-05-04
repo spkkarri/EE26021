@@ -1,0 +1,15 @@
+-e .
+ensure
+Flask
+Flask-Cors
+dvc
+dvc[gdrive]
+gunicorn
+joblib
+numpy
+pandas
+python-box
+PyYAML
+scikit-learn
+setuptools
+tensorflow
