@@ -8,7 +8,11 @@ import re
 from datetime import datetime
 
 app = Flask(__name__)
-GROQ_KEY = "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"
+import os
+from dotenv import load_dotenv
+load_dotenv() # Load variables from .env if it exists
+
+GROQ_KEY = os.environ.get("GROQ_API_KEY", "YOUR_FALLBACK_KEY_HERE")
 FEEDBACK_FILE = "C:/Users/vedan/WebScrapingAgent/feedback_data.json"
 
 HTML = """

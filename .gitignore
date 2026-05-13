@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# ML Models & Data
+*.pt
+*.pth
+*.npz
+*.parquet
+*.csv
+*.zip
+*.xlsx
+datasets/
+model_weights/
+
+# OS
+.DS_Store
+Thumbs.db

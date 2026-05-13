@@ -6,7 +6,7 @@ model = YOLO(model_path)
 
 
 model.train(
-    data='/content/drive/MyDrive/YOLO_Project/data.yaml',
+    data='03/data/data.yaml',
     epochs=50,                  
     imgsz=1024,                 
     batch=16,                   

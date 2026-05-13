@@ -138,5 +138,7 @@ Add battery storage optimization
 Include real-time deployment
 Integrate pricing and cost optimization
 Use advanced RL models (SAC, TD3)
-Conclusion
-This project demonstrates how AI can be effectively used to forecast energy demand and optimize renewable energy utilization in microgrids, contributing to smarter and more sustainable power systems.
+### Public Dataset
+This project uses the UCI Smart Grid Stability (Augmented) dataset.
+Download: https://archive.ics.uci.edu/static/public/468/smart+grid+stability+augmented.zip
+Rename the CSV to `microgrid_data.csv` before running.
