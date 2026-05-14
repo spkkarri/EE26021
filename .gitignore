@@ -22,6 +22,11 @@ env/
 datasets/
 model_weights/
 
-# OS
-.DS_Store
-Thumbs.db
+# Evaluation & Marks (Private)
+evaluation_report.md
+final_marks.md
+student_corrections.md
+final_evaluation_table.csv
+metrics.txt
+training.png
+private_eval/
