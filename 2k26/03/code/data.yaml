@@ -1,0 +1,8 @@
+path: ../yolo_dataset
+train: train/images
+val: val/images
+
+names:
+  0: porcelain
+  1: glass
+  2: composite

@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# ML Models & Data
+*.pt
+*.pth
+*.npz
+*.parquet
+*.csv
+*.zip
+*.xlsx
+datasets/
+model_weights/
+
+# Evaluation & Marks (Private)
+evaluation_report.md
+final_marks.md
+student_corrections.md
+final_evaluation_table.csv
+metrics.txt
+training.png
+private_eval/

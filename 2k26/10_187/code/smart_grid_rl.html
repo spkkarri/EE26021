@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Smart Grid RL — Advanced Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg:      #06090f;
+  --s1:      #0d1420;
+  --s2:      #111c2e;
+  --border:  #1a2d48;
+  --b2:      #243d5c;
+  --accent:  #00e5b0;
+  --blue:    #4d9fff;
+  --orange:  #ff8c42;
+  --purple:  #b06cff;
+  --red:     #ff4d6a;
+  --green:   #28d98a;
+  --yellow:  #ffd23f;
+  --text:    #dde4ef;
+  --muted:   #4d6480;
+  --mono:    'JetBrains Mono', monospace;
+  --sans:    'DM Sans', sans-serif;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; padding:20px; font-size:14px; }
+
+/* ── HEADER ── */
+header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+.brand { display:flex; align-items:center; gap:14px; }
+.brand-icon { width:44px; height:44px; background:linear-gradient(135deg,var(--accent),var(--blue)); border-radius:12px; display:grid; place-items:center; font-size:22px; }
+.brand-title { font-family:var(--mono); font-size:1.3rem; font-weight:700; letter-spacing:-0.5px; }
+.brand-title span { color:var(--accent); }
+.brand-sub { font-size:0.7rem; color:var(--muted); margin-top:2px; }
+.hdr-controls { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+
+.badge { display:flex; align-items:center; gap:6px; font-size:0.72rem; font-weight:500; padding:5px 12px; border-radius:20px; font-family:var(--mono); }
+.badge-live { background:rgba(0,229,176,0.08); border:1px solid rgba(0,229,176,0.25); color:var(--accent); }
+.badge-agent { background:rgba(77,159,255,0.1); border:1px solid rgba(77,159,255,0.3); color:var(--blue); }
+.dot { width:7px; height:7px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite; }
+.dot.off { background:var(--muted); animation:none; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+
+.btn { padding:7px 16px; border-radius:8px; border:1px solid var(--border); background:var(--s1); color:var(--text); font-family:var(--mono); font-size:0.72rem; font-weight:600; cursor:pointer; transition:all .2s; }
+.btn:hover { border-color:var(--accent); color:var(--accent); }
+.btn.active { background:var(--accent); border-color:var(--accent); color:#000; }
+.btn.stop { border-color:var(--red); color:var(--red); }
+.btn:disabled { opacity:.4; cursor:not-allowed; }
+
+/* ── KPI STRIP ── */
+.kpi-row { display:grid; grid-template-columns:repeat(8,1fr); gap:10px; margin-bottom:16px; }
+@media(max-width:1200px){.kpi-row{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:700px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
+
+.kpi { background:var(--s1); border:1px solid var(--border); border-radius:10px; padding:12px 14px; position:relative; overflow:hidden; transition:border-color .3s; }
+.kpi:hover { border-color:var(--b2); }
+.kpi::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.kpi.k-solar::after  { background:var(--yellow); }
+.kpi.k-wind::after   { background:var(--blue); }
+.kpi.k-demand::after { background:var(--orange); }
+.kpi.k-bat::after    { background:var(--green); }
+.kpi.k-grid::after   { background:var(--red); }
+.kpi.k-ren::after    { background:var(--accent); }
+.kpi.k-tou::after    { background:var(--purple); }
+.kpi.k-reward::after { background:linear-gradient(90deg,var(--accent),var(--blue)); }
+
+.kpi-label { font-size:0.65rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+.kpi-val { font-family:var(--mono); font-size:1.55rem; font-weight:700; line-height:1; }
+.kpi-unit { font-size:0.65rem; color:var(--muted); margin-top:3px; }
+.kpi.k-solar .kpi-val  { color:var(--yellow); }
+.kpi.k-wind  .kpi-val  { color:var(--blue); }
+.kpi.k-demand .kpi-val { color:var(--orange); }
+.kpi.k-bat .kpi-val    { color:var(--green); }
+.kpi.k-grid .kpi-val   { color:var(--red); }
+.kpi.k-ren .kpi-val    { color:var(--accent); }
+.kpi.k-tou .kpi-val    { color:var(--purple); }
+.kpi.k-reward .kpi-val { color:var(--blue); }
+
+.bat-bar { height:3px; background:var(--border); border-radius:2px; margin-top:6px; overflow:hidden; }
+.bat-fill { height:100%; background:var(--green); border-radius:2px; transition:width .5s; }
+
+/* ── LAYOUT ── */
+.row2 { display:grid; grid-template-columns:2fr 1fr; gap:14px; margin-bottom:14px; }
+.row3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+@media(max-width:1100px){.row2{grid-template-columns:1fr;} .row3{grid-template-columns:1fr 1fr;}}
+@media(max-width:700px){.row3{grid-template-columns:1fr;}}
+
+.panel { background:var(--s1); border:1px solid var(--border); border-radius:12px; padding:18px; }
+.panel-title { font-size:0.65rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; }
+.chart-wrap { position:relative; height:190px; }
+
+/* ── METRIC ROWS ── */
+.mrow { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--border); font-size:0.82rem; }
+.mrow:last-child { border-bottom:none; }
+.mname { color:var(--muted); }
+.mval  { font-family:var(--mono); font-weight:700; }
+
+/* ── PROGRESS ── */
+.prog { margin-top:6px; }
+.prog-labels { display:flex; justify-content:space-between; font-size:.68rem; color:var(--muted); margin-bottom:3px; }
+.prog-bar { height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:3px; transition:width .6s; }
+
+/* ── TABLE ── */
+.cmp-table { width:100%; border-collapse:collapse; font-size:.78rem; }
+.cmp-table th { padding:7px 8px; text-align:left; color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); text-transform:uppercase; font-size:.65rem; letter-spacing:.06em; }
+.cmp-table td { padding:9px 8px; border-bottom:1px solid rgba(26,45,72,.5); }
+.cmp-table tr:last-child td { border-bottom:none; }
+.best { color:var(--accent); font-weight:700; font-family:var(--mono); }
+.dim  { color:var(--muted);  font-family:var(--mono); }
+
+/* ── ACTION BADGE ── */
+.act-badge { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:8px; border:1px solid var(--border); background:rgba(0,229,176,.04); font-size:.8rem; font-weight:600; font-family:var(--mono); margin-bottom:14px; }
+.act-dot { width:9px; height:9px; border-radius:50%; }
+
+/* ── LOG ── */
+.log-list { list-style:none; max-height:200px; overflow-y:auto; font-size:.72rem; }
+.log-list li { display:flex; gap:8px; padding:5px 0; border-bottom:1px solid rgba(26,45,72,.4); }
+.log-step { color:var(--muted); font-family:var(--mono); min-width:36px; }
+.log-msg  { color:var(--text); line-height:1.4; }
+
+/* TOU chart */
+.tou-grid { display:grid; grid-template-columns:repeat(24,1fr); gap:2px; margin-top:8px; }
+.tou-bar { border-radius:2px; transition:background .3s; position:relative; }
+.tou-bar.current { outline:2px solid var(--accent); }
+.tou-label { font-size:.6rem; color:var(--muted); text-align:center; margin-top:2px; }
+
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="brand">
+    <div class="brand-icon">⚡</div>
+    <div>
+      <div class="brand-title">Smart<span>Grid</span> RL</div>
+      <div class="brand-sub">Dueling DDQN + PPO · Real Dataset · Time-of-Use Pricing · INCET 2025</div>
+    </div>
+  </div>
+  <div class="hdr-controls">
+    <div class="badge badge-live"><div class="dot" id="sdot"></div><span id="stext">Connecting…</span></div>
+    <div class="badge badge-agent">Agent: <span id="agent-label">DQN</span></div>
+    <button class="btn" id="btn-dqn"  onclick="switchAgent('dqn')">DQN</button>
+    <button class="btn" id="btn-ppo"  onclick="switchAgent('ppo')">PPO</button>
+    <button class="btn active" id="btn-start" onclick="startSim()">▶ Start</button>
+    <button class="btn stop"   id="btn-stop"  onclick="stopSim()" disabled>■ Stop</button>
+    <button class="btn"                        onclick="resetSim()">↺ Reset</button>
+  </div>
+</header>
+
+<!-- KPI STRIP -->
+<div class="kpi-row">
+  <div class="kpi k-solar">  <div class="kpi-label">☀ Solar</div>    <div class="kpi-val" id="v-solar">—</div>   <div class="kpi-unit">MW</div></div>
+  <div class="kpi k-wind">   <div class="kpi-label">💨 Wind</div>     <div class="kpi-val" id="v-wind">—</div>    <div class="kpi-unit">MW</div></div>
+  <div class="kpi k-demand"> <div class="kpi-label">⚡ Demand</div>   <div class="kpi-val" id="v-demand">—</div>  <div class="kpi-unit">MW</div></div>
+  <div class="kpi k-bat">    <div class="kpi-label">🔋 Battery</div>  <div class="kpi-val" id="v-bat">—</div>     <div class="kpi-unit">MWh / 500</div><div class="bat-bar"><div class="bat-fill" id="bat-fill" style="width:0%"></div></div></div>
+  <div class="kpi k-grid">   <div class="kpi-label">🏭 Grid</div>     <div class="kpi-val" id="v-grid">—</div>    <div class="kpi-unit">MW used</div></div>
+  <div class="kpi k-ren">    <div class="kpi-label">🌿 Renewable</div><div class="kpi-val" id="v-ren">—</div>     <div class="kpi-unit">% of demand</div></div>
+  <div class="kpi k-tou">    <div class="kpi-label">💰 ToU Price</div><div class="kpi-val" id="v-tou">—</div>     <div class="kpi-unit">rate (norm.)</div></div>
+  <div class="kpi k-reward"> <div class="kpi-label">🏆 Cumulative</div><div class="kpi-val" id="v-reward">—</div><div class="kpi-unit">reward</div></div>
+</div>
+
+<!-- CHARTS ROW -->
+<div class="row2" style="margin-bottom:14px">
+  <div class="panel">
+    <div class="panel-title">Energy Sources vs Demand <span id="hour-tag" style="color:var(--accent);font-family:var(--mono)">hr —</span></div>
+    <div class="chart-wrap"><canvas id="chart-energy"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Cumulative Reward</div>
+    <div class="chart-wrap"><canvas id="chart-reward"></canvas></div>
+  </div>
+</div>
+
+<!-- BOTTOM 3-COL -->
+<div class="row3">
+
+  <!-- Decision panel -->
+  <div class="panel">
+    <div class="panel-title">Current Decision</div>
+    <div class="act-badge" id="act-badge">
+      <div class="act-dot" id="act-dot" style="background:var(--accent)"></div>
+      <span id="act-name">Waiting…</span>
+      <span style="margin-left:auto;font-size:.65rem;color:var(--muted)" id="act-conf"></span>
+    </div>
+
+    <div class="mrow"><span class="mname">Renewable Fraction</span><span class="mval" id="m-ren" style="color:var(--accent)">—</span></div>
+    <div class="prog"><div class="prog-bar"><div class="prog-fill" id="bar-ren"  style="background:var(--accent);width:0%"></div></div></div>
+
+    <div class="mrow" style="margin-top:8px"><span class="mname">Grid Dependency</span><span class="mval" id="m-grid" style="color:var(--red)">—</span></div>
+    <div class="prog"><div class="prog-bar"><div class="prog-fill" id="bar-grid" style="background:var(--red);width:0%"></div></div></div>
+
+    <div class="mrow" style="margin-top:8px"><span class="mname">Unmet Demand</span><span class="mval" id="m-unmet" style="color:var(--yellow)">—</span></div>
+    <div class="mrow"><span class="mname">ToU Price</span><span class="mval" id="m-tou" style="color:var(--purple)">—</span></div>
+    <div class="mrow"><span class="mname">Episode Step</span><span class="mval" id="m-step" style="color:var(--muted)">—</span></div>
+    <div class="mrow"><span class="mname">Total Steps</span><span class="mval" id="m-total" style="color:var(--muted)">—</span></div>
+
+    <!-- TOU heatmap -->
+    <div style="margin-top:14px">
+      <div class="panel-title" style="margin-bottom:6px">Time-of-Use Price (24h)</div>
+      <div class="tou-grid" id="tou-grid"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:.6rem;color:var(--muted)">
+        <span>0h</span><span>6h</span><span>12h</span><span>18h</span><span>23h</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live metrics -->
+  <div class="panel">
+    <div class="panel-title">Live Performance (Paper Table II)</div>
+    <div class="mrow"><span class="mname">Energy Efficiency</span><span class="mval" id="pm-eff" style="color:var(--accent)">—</span></div>
+    <div class="prog"><div class="prog-bar"><div class="prog-fill" id="bar-eff" style="background:var(--accent);width:0%"></div></div></div>
+    <div class="mrow" style="margin-top:8px"><span class="mname">Grid Stability Index</span><span class="mval" id="pm-stab" style="color:var(--blue)">—</span></div>
+    <div class="prog"><div class="prog-bar"><div class="prog-fill" id="bar-stab" style="background:var(--blue);width:0%"></div></div></div>
+    <div class="mrow" style="margin-top:8px"><span class="mname">Cost Reduction</span><span class="mval" id="pm-cost" style="color:var(--green)">—</span></div>
+    <div class="prog"><div class="prog-bar"><div class="prog-fill" id="bar-cost" style="background:var(--green);width:0%"></div></div></div>
+    <div class="mrow" style="margin-top:8px"><span class="mname">Active Agent</span><span class="mval" id="pm-agent" style="color:var(--purple)">—</span></div>
+    <div class="mrow"><span class="mname">Step Reward</span><span class="mval" id="pm-stepr" style="color:var(--muted)">—</span></div>
+
+    <div style="margin-top:16px">
+      <div class="panel-title" style="margin-bottom:8px">Action Log</div>
+      <ul class="log-list" id="log"></ul>
+    </div>
+  </div>
+
+  <!-- Comparison table -->
+  <div class="panel">
+    <div class="panel-title">Method Comparison</div>
+    <table class="cmp-table">
+      <thead><tr><th>Method</th><th>Eff %</th><th>Stab</th><th>Cost↓</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--muted)">Rule-Based</td>  <td class="dim">72%</td><td class="dim">0.65</td><td class="dim">10%</td></tr>
+        <tr><td style="color:var(--muted)">Demand Resp.</td><td class="dim">78%</td><td class="dim">0.72</td><td class="dim">18%</td></tr>
+        <tr><td style="color:var(--muted)">Basic DQN</td>   <td class="dim">92%</td><td class="dim">0.89</td><td class="dim">35%</td></tr>
+        <tr style="background:rgba(0,229,176,.04)">
+          <td style="color:var(--accent);font-weight:600">DDQN+PER</td>
+          <td class="best" id="cmp-dqn-eff">—</td>
+          <td class="best" id="cmp-dqn-stab">—</td>
+          <td class="best" id="cmp-dqn-cost">—</td>
+        </tr>
+        <tr style="background:rgba(77,159,255,.04)">
+          <td style="color:var(--blue);font-weight:600">PPO</td>
+          <td class="best" id="cmp-ppo-eff" style="color:var(--blue)">—</td>
+          <td class="best" id="cmp-ppo-stab" style="color:var(--blue)">—</td>
+          <td class="best" id="cmp-ppo-cost" style="color:var(--blue)">—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:20px">
+      <div class="panel-title" style="margin-bottom:8px">Upgrades vs Paper</div>
+      <div style="font-size:.72rem;line-height:1.9;color:var(--muted)">
+        <div><span style="color:var(--accent)">✓</span> Dueling network architecture</div>
+        <div><span style="color:var(--accent)">✓</span> Double DQN (less overestimation)</div>
+        <div><span style="color:var(--accent)">✓</span> Prioritized Experience Replay</div>
+        <div><span style="color:var(--accent)">✓</span> PPO Actor-Critic agent</div>
+        <div><span style="color:var(--accent)">✓</span> Real 8760h dataset</div>
+        <div><span style="color:var(--accent)">✓</span> Time-of-Use electricity pricing</div>
+        <div><span style="color:var(--accent)">✓</span> 9-dim state with weather</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const API = "http://127.0.0.1:5000";
+let running = false, timer = null;
+let totalSteps = 0;
+let sumRen=0, sumGrid=0, sumUnmet=0, sumDem=0;
+let currentAgent = "dqn";
+
+// Per-agent rolling accumulators
+const acc = { dqn:{r:0,g:0,u:0,d:0}, ppo:{r:0,g:0,u:0,d:0} };
+
+const MAX = 60;
+const lbls=[],dSolar=[],dWind=[],dDem=[],dGrid=[],dReward=[];
+
+// TOU prices
+const TOU = [.08,.08,.08,.08,.08,.08,.15,.20,.28,.28,.22,.18,.15,.15,.18,.22,.28,.32,.30,.28,.24,.18,.12,.08];
+
+// Build TOU heatmap
+const touGrid = document.getElementById('tou-grid');
+TOU.forEach((p,h)=>{
+  const col = `hsl(${(1-p/0.35)*120},70%,45%)`;
+  touGrid.innerHTML += `<div class="tou-bar" id="tou-${h}" style="height:${Math.round(p/0.35*30)+10}px;background:${col}" title="Hour ${h}: ${p}"></div>`;
+});
+
+// Charts
+const ctxE = document.getElementById('chart-energy').getContext('2d');
+const chartE = new Chart(ctxE,{
+  type:'line', data:{labels:lbls, datasets:[
+    {label:'Solar', data:dSolar,  borderColor:'#ffd23f',backgroundColor:'rgba(255,210,63,.06)', tension:.4,pointRadius:0,borderWidth:1.5},
+    {label:'Wind',  data:dWind,   borderColor:'#4d9fff',backgroundColor:'rgba(77,159,255,.06)', tension:.4,pointRadius:0,borderWidth:1.5},
+    {label:'Demand',data:dDem,    borderColor:'#ff8c42',backgroundColor:'rgba(255,140,66,.06)', tension:.4,pointRadius:0,borderWidth:2,borderDash:[4,2]},
+    {label:'Grid',  data:dGrid,   borderColor:'#ff4d6a',backgroundColor:'rgba(255,77,106,.06)', tension:.4,pointRadius:0,borderWidth:1.5},
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,animation:false,
+    plugins:{legend:{labels:{color:'#4d6480',font:{size:10},boxWidth:10}}},
+    scales:{x:{ticks:{color:'#4d6480',font:{size:9},maxTicksLimit:8},grid:{color:'rgba(26,45,72,.5)'}},
+            y:{ticks:{color:'#4d6480',font:{size:9}},grid:{color:'rgba(26,45,72,.5)'},title:{display:true,text:'MW',color:'#4d6480',font:{size:9}}}}}
+});
+
+const ctxR = document.getElementById('chart-reward').getContext('2d');
+const chartR = new Chart(ctxR,{
+  type:'line', data:{labels:lbls, datasets:[
+    {label:'Cum. Reward',data:dReward,borderColor:'#4d9fff',backgroundColor:'rgba(77,159,255,.08)',tension:.4,pointRadius:0,borderWidth:2}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,animation:false,
+    plugins:{legend:{labels:{color:'#4d6480',font:{size:10},boxWidth:10}}},
+    scales:{x:{ticks:{color:'#4d6480',font:{size:9},maxTicksLimit:8},grid:{color:'rgba(26,45,72,.5)'}},
+            y:{ticks:{color:'#4d6480',font:{size:9}},grid:{color:'rgba(26,45,72,.5)'}}}}
+});
+
+const ACTION_COLORS = ['#28d98a','#ffd23f','#ff4d6a','#00e5b0','#4d6480'];
+
+async function fetchStep(){
+  try{
+    const res  = await fetch(`${API}/step?agent=${currentAgent}`);
+    const d    = await res.json();
+
+    // KPIs
+    document.getElementById('v-solar').textContent  = d.solar.toFixed(0);
+    document.getElementById('v-wind').textContent   = d.wind.toFixed(0);
+    document.getElementById('v-demand').textContent = d.demand.toFixed(0);
+    document.getElementById('v-bat').textContent    = d.battery.toFixed(0);
+    document.getElementById('bat-fill').style.width = d.battery_pct+'%';
+    document.getElementById('v-grid').textContent   = d.grid.toFixed(0);
+    document.getElementById('v-ren').textContent    = d.ren_fraction.toFixed(1)+'%';
+    document.getElementById('v-tou').textContent    = d.tou_price.toFixed(3);
+    document.getElementById('v-reward').textContent = d.cumulative_reward.toFixed(1);
+    document.getElementById('hour-tag').textContent = `hr ${d.hour}`;
+
+    // Action badge
+    document.getElementById('act-name').textContent = d.action_name;
+    document.getElementById('act-dot').style.background = ACTION_COLORS[d.action];
+    document.getElementById('act-conf').textContent = `${d.confidence}% conf.`;
+
+    // Decision metrics
+    const gridPct = d.demand>0 ? (d.grid/d.demand*100) : 0;
+    document.getElementById('m-ren').textContent   = d.ren_fraction.toFixed(1)+'%';
+    document.getElementById('m-grid').textContent  = gridPct.toFixed(1)+'%';
+    document.getElementById('m-unmet').textContent = d.unmet.toFixed(1)+' MW';
+    document.getElementById('m-tou').textContent   = d.tou_price.toFixed(3);
+    document.getElementById('m-step').textContent  = d.step;
+    document.getElementById('m-total').textContent = ++totalSteps;
+    document.getElementById('bar-ren').style.width  = Math.min(d.ren_fraction,100)+'%';
+    document.getElementById('bar-grid').style.width = Math.min(gridPct,100)+'%';
+
+    // TOU current hour highlight
+    document.querySelectorAll('.tou-bar').forEach(el=>el.classList.remove('current'));
+    const cur = document.getElementById(`tou-${d.hour}`);
+    if(cur) cur.classList.add('current');
+
+    // Rolling metrics
+    sumRen  += d.renewable; sumGrid += d.grid;
+    sumUnmet+= d.unmet;     sumDem  += d.demand;
+    const eff  = sumDem>0 ? (sumRen/sumDem*100) : 0;
+    const stab = sumDem>0 ? (1-sumUnmet/sumDem) : 1;
+    const cost = sumDem>0 ? ((1-sumGrid/sumDem)*100) : 0;
+
+    document.getElementById('pm-eff').textContent  = eff.toFixed(1)+'%';
+    document.getElementById('pm-stab').textContent = stab.toFixed(3);
+    document.getElementById('pm-cost').textContent = cost.toFixed(1)+'%';
+    document.getElementById('pm-agent').textContent= d.agent.toUpperCase();
+    document.getElementById('pm-stepr').textContent= d.reward.toFixed(4);
+    document.getElementById('bar-eff').style.width  = Math.min(eff,100)+'%';
+    document.getElementById('bar-stab').style.width = Math.min(stab*100,100)+'%';
+    document.getElementById('bar-cost').style.width = Math.min(cost,100)+'%';
+
+    // Comparison table (update live agent column)
+    if(d.agent==='dqn'){
+      document.getElementById('cmp-dqn-eff').textContent  = eff.toFixed(1)+'%';
+      document.getElementById('cmp-dqn-stab').textContent = stab.toFixed(3);
+      document.getElementById('cmp-dqn-cost').textContent = cost.toFixed(1)+'%';
+    } else {
+      document.getElementById('cmp-ppo-eff').textContent  = eff.toFixed(1)+'%';
+      document.getElementById('cmp-ppo-stab').textContent = stab.toFixed(3);
+      document.getElementById('cmp-ppo-cost').textContent = cost.toFixed(1)+'%';
+    }
+
+    // Charts
+    lbls.push(`t${totalSteps}`);
+    dSolar.push(d.solar); dWind.push(d.wind); dDem.push(d.demand); dGrid.push(d.grid);
+    dReward.push(d.cumulative_reward);
+    if(lbls.length>MAX){[lbls,dSolar,dWind,dDem,dGrid,dReward].forEach(a=>a.shift());}
+    chartE.update('none'); chartR.update('none');
+
+    // Log
+    const log = document.getElementById('log');
+    const li  = document.createElement('li');
+    li.innerHTML = `<span class="log-step">#${totalSteps}</span><span class="log-msg">[${d.agent.toUpperCase()}] ${d.action_name} | ren:${d.ren_fraction.toFixed(0)}% tou:${d.tou_price.toFixed(2)} r:${d.reward.toFixed(3)}</span>`;
+    log.prepend(li);
+    if(log.children.length>40) log.lastChild.remove();
+
+    setStatus(true);
+  } catch(e){ setStatus(false); }
+}
+
+function setStatus(ok){
+  document.getElementById('sdot').className = ok?'dot':'dot off';
+  document.getElementById('stext').textContent = ok?'Live':'Disconnected — run app.py';
+}
+
+function startSim(){
+  if(running) return;
+  running=true;
+  document.getElementById('btn-start').disabled=true;
+  document.getElementById('btn-stop').disabled=false;
+  timer=setInterval(fetchStep,800);
+}
+
+function stopSim(){
+  running=false; clearInterval(timer);
+  document.getElementById('btn-start').disabled=false;
+  document.getElementById('btn-stop').disabled=true;
+  setStatus(false);
+}
+
+async function resetSim(){
+  stopSim();
+  totalSteps=0; sumRen=sumGrid=sumUnmet=sumDem=0;
+  [lbls,dSolar,dWind,dDem,dGrid,dReward].forEach(a=>a.length=0);
+  chartE.update(); chartR.update();
+  document.getElementById('log').innerHTML='';
+  try{ await fetch(`${API}/reset`); } catch(e){}
+}
+
+async function switchAgent(name){
+  currentAgent=name;
+  sumRen=sumGrid=sumUnmet=sumDem=0;
+  document.getElementById('agent-label').textContent=name.toUpperCase();
+  document.getElementById('btn-dqn').className='btn'+(name==='dqn'?' active':'');
+  document.getElementById('btn-ppo').className='btn'+(name==='ppo'?' active':'');
+  try{ await fetch(`${API}/switch?agent=${name}`); } catch(e){}
+}
+
+// Init TOU button highlight
+document.getElementById('btn-dqn').className='btn active';
+
+startSim();
+</script>
+</body>
+</html>
