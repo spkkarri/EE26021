@@ -1,6 +1,0 @@
-fastapi
-uvicorn
-tiktoken
-pydantic
-torch==2.2.2
-numpy

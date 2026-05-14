@@ -1,8 +1,0 @@
-# Requires Python >= 3.10
-torch>=2.0
-lightgbm
-pandas
-numpy
-scikit-learn
-matplotlib
-huggingface_hub

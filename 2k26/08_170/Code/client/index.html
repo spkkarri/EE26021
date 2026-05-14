@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Femto-GPT Models</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap');
+
+    :root {
+      --bg-a: #f7fbff;
+      --bg-b: #eef5ff;
+      --bg-c: #f5f9ff;
+      --blob-1: #dcebff;
+      --blob-2: #dde9ff;
+      --text: #1f2a3d;
+      --heading: #0e2e66;
+      --muted: #5b6c86;
+      --border: #d5dbe8;
+      --card-bg: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      --card-hover-bg: #f5faff;
+      --card-heading: #123f86;
+      --stats-text: #314766;
+      --stats-bar: #d5e5ff;
+      --tag: #0f4fae;
+      --tag-text: #ffffff;
+      --shadow: 0 14px 30px rgba(21, 63, 133, 0.09);
+      --hover-shadow: 0 18px 34px rgba(30, 109, 226, 0.16);
+      --hover-border: #9ec6ff;
+      --toggle-bg: rgba(255, 255, 255, 0.84);
+      --toggle-bg-hover: rgba(245, 250, 255, 0.98);
+      --toggle-text: #28426f;
+      --toggle-border: rgba(15, 79, 174, 0.2);
+    }
+
+    body.theme-dark {
+      --bg-a: #0f1115;
+      --bg-b: #151923;
+      --bg-c: #11151f;
+      --blob-1: #1a2130;
+      --blob-2: #1b2333;
+      --text: #eef2fb;
+      --heading: #dbe3f4;
+      --muted: #95a1b8;
+      --border: rgba(168, 180, 206, 0.22);
+      --card-bg: linear-gradient(180deg, rgba(22, 28, 40, 0.86) 0%, rgba(17, 22, 33, 0.94) 100%);
+      --card-hover-bg: rgba(27, 35, 49, 0.96);
+      --card-heading: #dce6f9;
+      --stats-text: #b6c3dc;
+      --stats-bar: rgba(168, 180, 206, 0.34);
+      --tag: #253b62;
+      --tag-text: #e6ebf8;
+      --shadow: 0 14px 30px rgba(0, 0, 0, 0.24);
+      --hover-shadow: 0 18px 34px rgba(0, 0, 0, 0.34);
+      --hover-border: rgba(191, 211, 255, 0.58);
+      --toggle-bg: rgba(20, 25, 36, 0.75);
+      --toggle-bg-hover: rgba(29, 36, 51, 0.9);
+      --toggle-text: #dbe3f4;
+      --toggle-border: rgba(168, 180, 206, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Sora', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 12%, var(--blob-1) 0%, transparent 32%),
+        radial-gradient(circle at 80% 86%, var(--blob-2) 0%, transparent 34%),
+        linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 52%, var(--bg-c) 100%);
+      display: flex;
+      justify-content: center;
+      padding: 48px 20px 36px;
+      transition: background 220ms ease, color 220ms ease;
+    }
+
+    .theme-toggle-btn {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      z-index: 20;
+      height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid var(--toggle-border);
+      background: var(--toggle-bg);
+      color: var(--toggle-text);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background 150ms ease, transform 150ms ease, color 150ms ease, border-color 150ms ease;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--toggle-bg-hover);
+      transform: translateY(-1px);
+    }
+
+    .wrapper {
+      width: min(1100px, 100%);
+      animation: pageReveal 600ms ease;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      text-align: center;
+      letter-spacing: 0.03em;
+      font-weight: 800;
+      color: var(--heading);
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+      margin-bottom: 34px;
+      font-weight: 600;
+    }
+
+    .model-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .model-details {
+      margin-top: 26px;
+      padding: 16px 18px;
+      text-align: center;
+    }
+
+    .model-details h3 {
+      font-size: 1rem;
+      color: var(--card-heading);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .model-details table {
+      width: min(560px, 100%);
+      margin: 0 auto;
+      border-collapse: collapse;
+      color: var(--stats-text);
+      font-size: 0.92rem;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .model-details th,
+    .model-details td {
+      border-bottom: 1px solid var(--border);
+      padding: 8px 10px;
+    }
+
+    .model-details th {
+      width: 62%;
+      color: var(--card-heading);
+      font-weight: 700;
+    }
+
+    .model-details tr:last-child th,
+    .model-details tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .model-card {
+      text-decoration: none;
+      color: inherit;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 18px 18px;
+      box-shadow: var(--shadow);
+      position: relative;
+      display: block;
+      min-height: 360px;
+      transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+      animation: cardIn 540ms ease both;
+    }
+
+    .model-card:nth-child(2) {
+      animation-delay: 80ms;
+    }
+
+    .model-card:nth-child(3) {
+      animation-delay: 160ms;
+    }
+
+    .model-card:hover,
+    .model-card:focus-visible {
+      border-color: var(--hover-border);
+      background: var(--card-hover-bg);
+      transform: translateY(-4px);
+      box-shadow: var(--hover-shadow);
+      outline: none;
+    }
+
+    .model-card h2 {
+      font-size: 1.12rem;
+      color: var(--card-heading);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .model-card p {
+      font-size: 0.93rem;
+      line-height: 1.58;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .stats {
+      display: grid;
+      gap: 7px;
+      font-size: 0.87rem;
+      color: var(--stats-text);
+    }
+
+    .stat-label {
+      color: var(--card-heading);
+      font-weight: 700;
+    }
+
+    .stats span {
+      display: block;
+      padding-left: 0;
+    }
+
+    .tag {
+      position: absolute;
+      top: -11px;
+      right: 14px;
+      background: var(--tag);
+      color: var(--tag-text);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 700;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+    }
+
+    @media (max-width: 900px) {
+      .model-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .model-card {
+        min-height: auto;
+      }
+    }
+
+    @keyframes pageReveal {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle-btn" id="themeToggleBtn" type="button" aria-label="Switch to dark mode">Dark Mode</button>
+
+  <main class="wrapper">
+    <h1>femto-gpt</h1>
+    <p class="subtitle">choose model</p>
+
+    <section class="model-grid" aria-label="Model selection">
+      <a class="model-card" href="execution.html?intent=Narrative%20Model&amp;api_url=https%3A%2F%2Frenganathc-femto-gpt-extension-2.hf.space%2Ftiny-stories">
+        <h2>Narrative Model</h2>
+        <p>Built for coherent storytelling, scene continuity, and expressive long-form generation.</p>
+        <div class="stats">
+          <span><span class="stat-label">Dataset:</span> Tiny-stories (Fiction passages and screenplay-style samples)</span>
+          <span><span class="stat-label">Fine-tuned:</span> No</span>
+          <span><span class="stat-label">Tokens in training dataset:</span> 473.8 million</span>
+          <span><span class="stat-label">Present epoch loss:</span> train: 1.4308 | validation: 1.4368</span>
+          <span><span class="stat-label">Perplexity (shortlisted next words):</span> e^1.43 (shortlists 4 out of 50,257 tokens)</span>
+        </div>
+      </a>
+
+      <a class="model-card" href="execution.html?intent=WEBedu%20Model&amp;api_url=https%3A%2F%2Frenganathc-femto-gpt.hf.space">
+        <h2>WEBedu Model</h2>
+        <p>Optimized for educational web text (like simple science, history)</p>
+        <div class="stats">
+          <span><span class="stat-label">Dataset:</span> Fineweb-Edu (Curated educational websites and technical guides)</span>
+          <span><span class="stat-label">Fine-tuned:</span> No</span>
+          <span><span class="stat-label">Tokens in training dataset:</span> 400 million</span>
+          <span><span class="stat-label">Present epoch loss:</span> train: 3.6942 | validation: 3.7563</span>
+          <span><span class="stat-label">Perplexity (shortlisted next words):</span> e^3.75 (shortlists 42 out of 50,257 tokens)</span>
+        </div>
+      </a>
+
+      <a class="model-card" href="execution.html?intent=U.%20S.%20Affairs%20Model&amp;api_url=https%3A%2F%2Frenganathc-femto-gpt-extension.hf.space%2Flora-us-affairs">
+        <span class="tag">LoRA Fine Tuned</span>
+        <h2>U. S. Affairs Model</h2>
+        <p>Specialized in U.S. political, civic, and public affairs language understanding.</p>
+        <div class="stats">
+          <span><span class="stat-label">Dataset:</span> Synthetically made. U.S. affairs (presidential, wars etc.)</span>
+          <span><span class="stat-label">Fine-tuned:</span> Yes (LoRA)</span>
+          <span><span class="stat-label">Fine-tuned Tokens in training dataset:</span> 39,490</span>
+          <span><span class="stat-label">Present epoch loss:</span> train: 3.0140 | validation: 3.8601</span>
+          <span><span class="stat-label">Perplexity (shortlisted next words):</span> e^3.86 (shortlists 47 out of 50,257 tokens)</span>
+        </div>
+      </a>
+    </section>
+
+    <section class="model-details" aria-label="Model details">
+      <h3>Model Architecture Details</h3>
+      <table>
+        <tbody>
+          <tr>
+            <th scope="row">Number of embeddings</th>
+            <td>512</td>
+          </tr>
+          <tr>
+            <th scope="row">Number of tokens</th>
+            <td>50257</td>
+          </tr>
+          <tr>
+            <th scope="row">Attention heads</th>
+            <td>8</td>
+          </tr>
+          <tr>
+            <th scope="row">Transformer block layers</th>
+            <td>8</td>
+          </tr>
+          <tr>
+            <th scope="row">Max token length</th>
+            <td>256</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    document.body.style.zoom = "105%";
+
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const savedTheme = localStorage.getItem("femto-theme");
+
+    if (savedTheme === "dark") {
+      document.body.classList.add("theme-dark");
+    }
+
+    function syncThemeButton() {
+      const darkModeActive = document.body.classList.contains("theme-dark");
+      themeToggleBtn.textContent = darkModeActive ? "Light Mode" : "Dark Mode";
+      themeToggleBtn.setAttribute("aria-label", darkModeActive ? "Switch to light mode" : "Switch to dark mode");
+    }
+
+    themeToggleBtn.addEventListener("click", () => {
+      const darkModeActive = document.body.classList.toggle("theme-dark");
+      localStorage.setItem("femto-theme", darkModeActive ? "dark" : "light");
+      syncThemeButton();
+    });
+
+    syncThemeButton();
+  </script>
+</body>
+</html>
